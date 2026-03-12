@@ -1,3 +1,4 @@
+use dirs::home_dir;
 use std::fmt;
 use std::fs::read_to_string;
 use std::{env, io};
@@ -156,8 +157,10 @@ impl Brakoll {
                     p = p_as_str.parse::<u32>().unwrap_or_default();
                 }
 
+                let f_sh = self.shorten_path(f.clone());
+
                 parsed_issues.push(Issue {
-                    file: f.clone(),
+                    file: f_sh,
                     line: i.0,
                     desc: d.to_string(),
                     prio: p,
@@ -197,5 +200,15 @@ impl Brakoll {
             .filter(|(_, line)| line.contains("d:"))
             .map(|(i, line)| (i + 1, line.to_owned()))
             .collect()
+    }
+
+    fn shorten_path(&mut self, path: String) -> String {
+        if let Some(home) = home_dir() {
+            let home = home.to_string_lossy();
+            if path.starts_with(home.as_ref()) {
+                return path.replacen(home.as_ref(), "~", 1);
+            }
+        }
+        path
     }
 }

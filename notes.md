@@ -1,53 +1,11 @@
-## general design
-
-prefix
-description
-priority:
-from 0 to 100 (where 100 is most critical)
-tag
-status:
-todo, done
-  
-"*todo" : prefix that lets brakoll know that this line is an issue
-Brakoll works by searching through the current directory and its children, finding all the lines with a "*todo" prefix and returning current issues
-  
----
-  
-### Examples
-
-This is line 246 in an example file "my_application/src/server.rs":
-  
-``` rust
-// *todo - d: fix formatting issue in debug statement, p: 10, t: debug, s: todo
-```
-  
-From within a directory (your project directory for instance) you can run the "get" subcommand without any extra arguments to get all the issues:
-  
-``` terminal
-brakoll get
-```
-  
-And recieve this output (the issues with most critical priority are listed last, those of poor priority or those with the "done" status are printed first):
-  
-``` terminal
-2 issue(s) were found.
-
-=== 80: done ===
-file: /Users/user/dev/my_application/src/api.rs
-line: 472, tag: n/a
-Desc: refactor query logic
-
-*** 10: todo ***
-file: /Users/user/dev/my_application/src/server.rs
-line: 246, tags: debug
-Desc: fix formatting issue in debug statement
-
-2 issue(s) were found.
-```
-
-  
----
-  
 ## todo
 
 
+- [ ] sort the issues list before the list() function 
+    1. the issues with "done" status should be printed absolutely first in order of priority (those with lowest priority first)
+    2. the issues with "todo" status should be printed last in order of priority
+- [ ] add "help" subcommand
+- [ ] add "-t" flag to allow the user to filter which tags they want to see
+- [ ] add "summary" subcommand to get a list of how many issues of each tag exist
+- [ ] perhaps add some concatenation to the filename in the list() function in some way, perhaps turn the home folder into just "~"
+- [ ] one cool thing would be a "tree" subcommand so that the user can see more visually in which files the most issues exist

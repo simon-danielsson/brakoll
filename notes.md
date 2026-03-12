@@ -34,7 +34,7 @@ And recieve this output (the issues with most critical priority are listed last,
 
 === 80: done ===
 file: /Users/user/dev/my_application/src/api.rs
-line: 472, tags: n/a
+line: 472, tag: n/a
 Desc: refactor query logic
 
 *** 10: todo ***

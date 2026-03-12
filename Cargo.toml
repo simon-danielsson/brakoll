@@ -1,7 +1,14 @@
 [package]
 name = "brakoll"
-version = "0.1.0"
+version = "0.1.5"
 edition = "2024"
+description = "Simple issue tracker for coding projects"
+repository = "https://github.com/simon-danielsson/brakoll"
+authors = ["Simon Danielsson <contact@simondanielsson.se>"]
+keywords = ["utility", "development", "productivity", "cli"]
+homepage = "https://www.simondanielsson.se"
+license = "MIT"
+rust-version = "1.94.0"
 
 [dependencies]
 walkdir = "2.5.0"

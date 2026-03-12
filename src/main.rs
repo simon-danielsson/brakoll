@@ -1,3 +1,4 @@
+use std::fmt;
 use std::fs::read_to_string;
 use std::{env, io};
 use walkdir::{DirEntry, WalkDir};
@@ -24,20 +25,33 @@ fn main() -> io::Result<()> {
     let mut b = Brakoll::new();
     let files_found = b.walk_children()?;
     b.issues = b.process_issues(files_found);
+    b.list();
     Ok(())
 }
 
+#[derive(Debug, PartialEq)]
 enum IssueStatus {
     Todo,
     Done,
 }
 
+impl fmt::Display for IssueStatus {
+    fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
+        let s = match self {
+            IssueStatus::Todo => "todo",
+            IssueStatus::Done => "done",
+        };
+        write!(f, "{s}")
+    }
+}
+
+#[derive(Debug)]
 struct Issue {
     file: String,
     line: usize,
     desc: String,
     prio: u32,
-    tags: Vec<String>,
+    tag: String,
     status: IssueStatus,
 }
 
@@ -63,7 +77,7 @@ impl Brakoll {
 
         let walker = WalkDir::new(cd).into_iter();
         let valid_file_extensions = utils::get_valid_file_ext();
-        println!("{:?}", valid_file_extensions);
+        // println!("{:?}", valid_file_extensions);
 
         let mut valid_paths_found: Vec<String> = Vec::new();
 
@@ -83,22 +97,72 @@ impl Brakoll {
         Ok(valid_paths_found)
     }
 
+    // *koll - d: this program works now, p: 81, t: engine, s: done
     fn process_issues(&mut self, files_found: Vec<String>) -> Vec<Issue> {
         let mut parsed_issues: Vec<Issue> = Vec::new();
 
         for f in files_found {
-            let raw_issues = self.find_issues(f);
+            let raw_issues = self.find_issues(&f);
 
             // example:
             // *koll - d: fix formatting issue in debug statement, p: 10, t: debug, s: todo
             for i in raw_issues {
+                let mut d = "";
+                let mut t = "";
+                let mut s_as_str = "";
+                let mut p_as_str = "";
+
+                {
+                    let mut string = "";
+
+                    if let Some(pos) = i.1.find("d:") {
+                        string = &i.1[pos..];
+                    }
+
+                    for pair in string.split(',') {
+                        let mut parts = pair.trim().splitn(2, ':');
+                        let key = parts.next().unwrap().trim();
+                        let value = parts.next().unwrap().trim();
+
+                        match key {
+                            "t" => t = value,
+                            "d" => d = value,
+                            "s" => s_as_str = value,
+                            "p" => p_as_str = value,
+                            _ => {}
+                        }
+                    }
+                }
+
+                if d.is_empty() {
+                    d = DEF_DESC;
+                }
+
+                if t.is_empty() {
+                    t = DEF_TAG;
+                }
+
+                let mut s = DEF_STAT;
+                if !s_as_str.is_empty() {
+                    if s_as_str.to_lowercase().contains("todo") {
+                        s = IssueStatus::Todo;
+                    } else {
+                        s = IssueStatus::Done;
+                    }
+                }
+
+                let mut p = DEF_PRIO;
+                if !p_as_str.is_empty() {
+                    p = p_as_str.parse::<u32>().unwrap_or_default();
+                }
+
                 parsed_issues.push(Issue {
-                    file: f,
+                    file: f.clone(),
                     line: i.0,
-                    desc: (),
-                    prio: (),
-                    tags: (),
-                    status: (),
+                    desc: d.to_string(),
+                    prio: p,
+                    tag: t.to_string(),
+                    status: s,
                 });
             }
         }
@@ -106,8 +170,25 @@ impl Brakoll {
         parsed_issues
     }
 
+    fn list(&mut self) {
+        println!("{} issue(s) were found.", self.issues.len());
+        println!("");
+        for i in self.issues.iter_mut() {
+            if i.status == IssueStatus::Todo {
+                println!("*** {p}: {s} ***", p = i.prio, s = i.status);
+            } else {
+                println!("=== {p}: {s} ===", p = i.prio, s = i.status);
+            }
+            println!("file: {}", i.file);
+            println!("line: {l}, tag: {t}", l = i.line, t = i.tag);
+            println!("desc: {}", i.desc);
+            println!("");
+        }
+        println!("{} issue(s) were found.", self.issues.len());
+    }
+
     /// returns line beginning with prefix and derives usize(line #) and String (raw issue line)
-    fn find_issues(&mut self, filename: String) -> Vec<(usize, String)> {
+    fn find_issues(&mut self, filename: &String) -> Vec<(usize, String)> {
         read_to_string(filename)
             .unwrap()
             .lines()

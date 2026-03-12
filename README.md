@@ -45,28 +45,31 @@ cargo install brakoll
 
 ## 💻 Usage
     
-> [!IMPORTANT]  
-> **WeatherAPI**  
-> Brakoll queries [WeatherAPI](https://www.weatherapi.com/) to fetch its weather data. To use this application, you must supply your own API key. Details on how to generate a key can be found on [WeatherAPIs developer page](https://www.weatherapi.com/docs/). Add your key to a new file in your home ($HOME) directory named ".brakoll": `~/.brakoll`  
+### Adding a new issue
+  
+When you want to add something to your issue list you simply type it out in your project (I would advise you to create a snippet for this; for example "issue").
+   
+``` rust
+// *brakoll - d: fix formatting issue in debug statement, p: 10, t: debug, s: todo
+```
+  
+- d: description of the issue (obligatory)
+- p: priority from 0 to 100 where 100 is critical priority (optional - def: 0)
+- t: tag (optional - def: n/a)
+- s: status [done | todo] (optional - def: todo)
+  
 
+> [!IMPORTANT]  
+> Issues are currently only single-line! If you want a long description, write it all on a single line or alternatively refer to a bigger document somewhere else inside your description. The prefix "*brakoll" is required but whatever is before it on the line is of no importance to the parser and will be ignored, e.g "#", "//", "--" or other comment syntax.
+
+### Listing and reviewing issues
+  
+Subcommands and flags will be added in future versions, but right now all you have to is type "brakoll" inside your current directory and all your issues within it and any children directories will be listed.
   
 ``` terminal
-Subcommands
-help : print help
-
-Flags
--l <str> : choose city location (default: Stockholm. Cities with spaces must be enclosed with double quotes; refer to the example down below!)
--t : view result directly in stdout instead of a TUI
--f <int> : set number of days to forecast (max: 10. default: 5. If a number is missing the default is used, if a number is larger than max the max value will be used.)
-
-Example usage:
-brakoll -l "rio de janeiro" -f 8
-
-Controls
-[Esc] : quit
-[Ctrl-C] : quit
+brakoll
 ```
-   
+
 ---
 <div id="license"></div>
 
@@ -78,9 +81,4 @@ This project is licensed under the [MIT License](https://github.com/simon-daniel
 
 ## 🛠 Dependencies
   
-- [crossterm](https://github.com/crossterm-rs/crossterm)  
-- [home](https://crates.io/crates/home/0.5.12)  
-- [rand](https://github.com/rust-random/rand)  
-- [serde](https://github.com/serde-rs/serde)  
-- [reqwest](https://github.com/seanmonstar/reqwest)  
-- [tokio](https://github.com/tokio-rs/tokio)  
+- [walkdir](https://github.com/BurntSushi/walkdir)  

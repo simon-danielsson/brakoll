@@ -6,7 +6,7 @@ use walkdir::{DirEntry, WalkDir};
 mod arg;
 mod utils;
 
-const PREFIX: &str = "*koll";
+const PREFIX: &str = "*brakoll";
 
 // === default values for issues ===
 const DEF_DESC: &str = "issue";
@@ -97,7 +97,7 @@ impl Brakoll {
         Ok(valid_paths_found)
     }
 
-    // *koll - d: this program works now, p: 81, t: engine, s: done
+    // *bk - d: this program works now, p: 81, t: engine, s: done
     fn process_issues(&mut self, files_found: Vec<String>) -> Vec<Issue> {
         let mut parsed_issues: Vec<Issue> = Vec::new();
 
@@ -105,7 +105,7 @@ impl Brakoll {
             let raw_issues = self.find_issues(&f);
 
             // example:
-            // *koll - d: fix formatting issue in debug statement, p: 10, t: debug, s: todo
+            // *brakoll - d: fix formatting issue in debug statement, p: 10, t: debug, s: todo
             for i in raw_issues {
                 let mut d = "";
                 let mut t = "";

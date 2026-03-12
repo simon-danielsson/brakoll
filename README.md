@@ -76,12 +76,12 @@ brakoll
 2 issue(s) were found.
 
 === 50: done ===
-file: /Users/user/dev/my_awesome_project/src/api.rs
+file: ~/dev/my_awesome_project/src/api.rs
 line: 426, tag: refactor
 desc: query parser for-loop
 
 *** 10: todo ***
-file: /Users/user/dev/my_awesome_project/src/main.rs
+file: ~/dev/my_awesome_project/src/main.rs
 line: 108, tag: debug
 desc: fix formatting issue in debug statement
 

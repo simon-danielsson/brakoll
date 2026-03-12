@@ -75,7 +75,7 @@ brakoll
 ``` terminal
 2 issue(s) were found.
 
-*** 50: done ***
+=== 50: done ===
 file: /Users/user/dev/my_awesome_project/src/api.rs
 line: 426, tag: refactor
 desc: query parser for-loop

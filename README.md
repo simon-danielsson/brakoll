@@ -61,7 +61,25 @@ When you want to add something to your issue list you simply type it out in your
 
 > [!IMPORTANT]  
 > Issues are currently only single-line! If you want a long description, write it all on a single line or alternatively refer to a bigger document somewhere else inside your description. The prefix "*brakoll" is required but whatever is before it on the line is of no importance to the parser and will be ignored, e.g "#", "//", "--" or other comment syntax.
+  
+Here's a way to integrate Brakoll into your neovim config using luasnip:
+  
+``` lua
+local ls = require("luasnip")
+local s = ls.snippet
+local t = ls.text_node
+local i = ls.insert_node
 
+return {
+    s("issue", {
+        t("*brakoll - d: "), i(1),
+        t(", p: "), i(2),
+        t(", t: "), i(3),
+        t(", s: todo"),
+    }),
+}
+```
+  
 ### Listing and reviewing issues
   
 Subcommands and flags will be added in future versions, but right now all you have to do is type "brakoll" inside your current directory and all your issues within it and any children directories will be listed.

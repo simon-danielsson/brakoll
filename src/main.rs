@@ -174,6 +174,9 @@ impl Brakoll {
     }
 
     fn list(&mut self) {
+        if self.issues.is_empty() {
+            println!("No issue was found.");
+        }
         println!("{} issue(s) were found.", self.issues.len());
         println!("");
         for i in self.issues.iter_mut() {

@@ -176,21 +176,22 @@ impl Brakoll {
     fn list(&mut self) {
         if self.issues.is_empty() {
             println!("No issue was found.");
-        }
-        println!("{} issue(s) were found.", self.issues.len());
-        println!("");
-        for i in self.issues.iter_mut() {
-            if i.status == IssueStatus::Todo {
-                println!("*** {p}: {s} ***", p = i.prio, s = i.status);
-            } else {
-                println!("=== {p}: {s} ===", p = i.prio, s = i.status);
-            }
-            println!("file: {}", i.file);
-            println!("line: {l}, tag: {t}", l = i.line, t = i.tag);
-            println!("desc: {}", i.desc);
+        } else {
+            println!("{} issue(s) were found.", self.issues.len());
             println!("");
+            for i in self.issues.iter_mut() {
+                if i.status == IssueStatus::Todo {
+                    println!("*** {p}: {s} ***", p = i.prio, s = i.status);
+                } else {
+                    println!("=== {p}: {s} ===", p = i.prio, s = i.status);
+                }
+                println!("file: {}", i.file);
+                println!("line: {l}, tag: {t}", l = i.line, t = i.tag);
+                println!("desc: {}", i.desc);
+                println!("");
+            }
+            println!("{} issue(s) were found.", self.issues.len());
         }
-        println!("{} issue(s) were found.", self.issues.len());
     }
 
     /// returns line beginning with prefix and derives usize(line #) and String (raw issue line)

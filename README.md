@@ -54,9 +54,9 @@ When you want to add something to your issue list you simply type it out in your
 ```
   
 - d: description of the issue (obligatory)
-- p: priority from 0 to 100 where 100 is critical priority (optional - def: 0)
-- t: tag (optional - def: n/a)
-- s: status [done | todo] (optional - def: todo)
+- p: priority from 0 to infinity where the highest number is the most critical priority (optional - fallback: 0)
+- t: tag (optional - fallback: n/a)
+- s: status [done | todo] (optional - fallback: todo)
   
 
 > [!IMPORTANT]  
@@ -64,11 +64,30 @@ When you want to add something to your issue list you simply type it out in your
 
 ### Listing and reviewing issues
   
-Subcommands and flags will be added in future versions, but right now all you have to is type "brakoll" inside your current directory and all your issues within it and any children directories will be listed.
+Subcommands and flags will be added in future versions, but right now all you have to do is type "brakoll" inside your current directory and all your issues within it and any children directories will be listed.
   
 ``` terminal
 brakoll
 ```
+  
+**Typical terminal output**
+  
+``` terminal
+2 issue(s) were found.
+
+*** 50: done ***
+file: /Users/user/dev/my_awesome_project/src/api.rs
+line: 426, tag: refactor
+desc: query parser for-loop
+
+*** 10: todo ***
+file: /Users/user/dev/my_awesome_project/src/main.rs
+line: 108, tag: debug
+desc: fix formatting issue in debug statement
+
+2 issue(s) were found.
+```
+
 
 ---
 <div id="license"></div>

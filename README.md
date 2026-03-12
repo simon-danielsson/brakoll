@@ -27,7 +27,9 @@
 
 ## 📌 Information
   
-Brakoll is a minimal weather forecast utility for the terminal.  
+Having a good method of tracking what's finished and what needs to be done is crucial once a project grows large enough. Of course, for team-driven development having a full-featured issue tracker such as GitHub or similar is preferable, but for solo-developers GitHub can feel like a quite over-engineered solution to a simple problem.
+  
+(The name "Brakoll" is derived from the swedish word "koll", which is the act of surveying or scanning something.)
   
 ---
 <div id="install"></div>

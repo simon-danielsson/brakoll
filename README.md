@@ -96,6 +96,12 @@ List number of issues with certain tags - list number of opened, closed and in-p
 brakoll summary
 ```
   
+Display help and version information.
+  
+``` terminal
+brakoll help
+```
+  
 ---
 <div id="license"></div>
 

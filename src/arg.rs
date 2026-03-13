@@ -1,35 +1,42 @@
+use crate::IssueStatus;
+
 #[derive(PartialEq, Clone)]
 pub struct Arguments {
     // pub no_tui: bool,
     // pub location: String,
     pub help: bool,
     pub summary: bool,
+    pub filter_tag: String,
+    pub filter_status: Option<IssueStatus>,
     // pub forecast: i32,
 }
 
 pub fn parse() -> Arguments {
     let mut it = std::env::args().skip(1); // skip program name
-    // let mut no_tui = false;
-    // let mut location = String::from("Stockholm");
+    let mut filter_tag = String::new();
+    let mut filter_status = String::new();
     let mut help = false;
     let mut summary = false;
-    // let mut forecast = DEF_FORECAST;
     while let Some(arg) = it.next() {
         match arg.as_str() {
-            // "-l" => {
-            //     location = it
-            //         .next()
-            //         .expect("No location was given after the \"-l\" flag.");
-            // }
-            "help" | "-h" | "h" => {
+            "-t" => {
+                filter_tag =
+                    it.next().expect("No tag was given after the \"-t\" flag.");
+            }
+
+            "-s" => {
+                filter_status =
+                    it.next().expect("No tag was given after the \"-t\" flag.");
+            }
+
+            "help" => {
                 help = true;
             }
-            "summary" | "-s" | "s" => {
+
+            "summary" => {
                 summary = true;
             }
-            // "-t" => {
-            //     no_tui = true;
-            // }
+
             // "-f" => {
             //     // use next if some and parse to i32, else default
             //     forecast = it
@@ -43,15 +50,22 @@ pub fn parse() -> Arguments {
         }
     }
 
-    // if forecast > MAX_FORECAST {
-    //     forecast = MAX_FORECAST
-    // }
+    let s_lower = filter_status.to_lowercase();
+    let status: Option<IssueStatus> = match () {
+        _ if s_lower.contains("op") || s_lower.contains("en") => Some(IssueStatus::Open),
+        _ if s_lower.contains("pr") || s_lower.contains("og") => {
+            Some(IssueStatus::InProgress)
+        }
+        _ if s_lower.contains("cl") || s_lower.contains("os") => Some(IssueStatus::Closed),
+        _ => None,
+    };
+
+    let filter_tag = filter_tag.trim();
 
     Arguments {
-        // no_tui,
-        // location,
         help,
         summary,
-        // forecast,
+        filter_tag: filter_tag.to_string(),
+        filter_status: status,
     }
 }

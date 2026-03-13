@@ -51,8 +51,6 @@ fn main() -> io::Result<()> {
         return Ok(());
     };
 
-    // *brakoll - d: implement -t <tag> flag to filter output of summary() by tag, p: 50, t: feature, s: open
-    // *brakoll - d: implement -s <status> flag to filter output of summary() by status, p: 70, t: feature, s: open
     if b.args.summary {
         b.summary();
         return Ok(());
@@ -60,11 +58,25 @@ fn main() -> io::Result<()> {
 
     b.sort_list();
 
+    // *brakoll - d: implement -t <tag> flag to filter output of list() by tag, p: 50, t: feature, s: progress
+    // *brakoll - d: implement -s <status> flag to filter output of list() by status, p: 70, t: feature, s: closed
+
+    // apply filter flag
+    let filt_flag = b.args.filter_status.clone();
+    if filt_flag != None {
+        println!("Filter by status: {}", filt_flag.unwrap());
+        b.issues =
+            b.issues.clone()
+                .into_iter()
+                .filter(|i| i.status == filt_flag.unwrap())
+                .collect();
+    }
+
     b.list();
     Ok(())
 }
 
-#[derive(Debug, Eq, Hash, PartialEq)]
+#[derive(Clone, Copy, Debug, Eq, Hash, PartialEq)]
 enum IssueStatus {
     Closed,
     Open,
@@ -92,7 +104,7 @@ impl fmt::Display for IssueStatus {
     }
 }
 
-#[derive(Debug)]
+#[derive(Clone, Debug)]
 struct Issue {
     file: String,
     line: usize,

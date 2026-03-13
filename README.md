@@ -96,6 +96,12 @@ All the issues listed, sorted by priority and status:
 brakoll
 ```
   
+An optional target path can be added (works alongside other flags):
+  
+``` terminal
+brakoll <relative path>
+```
+  
 Filter issues by tag:
   
 ``` terminal
@@ -114,7 +120,7 @@ Filter issues by description:
 brakoll -d <keyword>
 ```
   
-Limit search to current directory (i.e. no recursion):
+Limit search to zero depth (i.e. no recursion):
   
 ``` terminal
 brakoll -r

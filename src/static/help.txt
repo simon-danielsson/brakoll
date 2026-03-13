@@ -21,6 +21,9 @@ Important:
 
 === Flags & Subcommands ===
 
+An optional target path can be added (works alongside other flags):
+$ brakoll <relative path>
+
 All the issues listed, sorted by priority and status:
 $ brakoll
 
@@ -33,7 +36,7 @@ $ brakoll -s <status>
 Filter issues by description:
 $ brakoll -d <keyword>
 
-Limit search to current directory (i.e. no recursion):
+Limit search to zero depth (e.g. no recursion):
 $ brakoll -r
 
 Summary of all issues:

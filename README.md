@@ -65,7 +65,8 @@ fn debug() {
   
 
 > [!IMPORTANT]  
-> Issues are currently only single-line! If you want a long description, write it all on a single line or alternatively refer to a bigger document somewhere else inside your description. The prefix "*brakoll" is required but whatever is before it on the line is of no importance to the parser and will be ignored, e.g "#", "//", "--" or any other comment syntax.
+> * Issues are currently only single-line! If you want a long description, write it all on a single line or alternatively refer to a bigger document somewhere else inside your description.  
+> * The prefix "*brakoll" is required but whatever is before it on the line is of no importance to the parser and will be ignored, e.g "#", "//", "--" or any other comment syntax.
   
 Here's a way to integrate Brakoll into your neovim config using luasnip:
   

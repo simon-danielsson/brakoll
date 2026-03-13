@@ -192,7 +192,6 @@ impl Brakoll {
         }
 
         lb.util_cleanup()?;
-        println!("");
 
         Ok(valid_paths_found)
     }
@@ -340,7 +339,6 @@ impl Brakoll {
             println!("desc: {}", i.desc);
             println!("");
         }
-        utils::issues_found_print(len);
     }
     // *brakoll - d: tetet, p: 10, t: example, s: closed
 

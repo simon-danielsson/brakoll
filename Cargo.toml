@@ -1,6 +1,6 @@
 [package]
 name = "brakoll"
-version = "0.2.3"
+version = "0.2.4"
 edition = "2024"
 description = "Simple issue tracker for coding projects"
 repository = "https://github.com/simon-danielsson/brakoll"

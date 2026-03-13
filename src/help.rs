@@ -12,7 +12,6 @@ pub fn print() {
     println!("{APP_AUTH}");
     println!("{APP_REPO}");
     println!("{APP_DESC}");
-    // println!("==========================");
     println!("");
     print!("{}", HELP_CONTENTS);
 }

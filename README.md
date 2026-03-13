@@ -82,12 +82,18 @@ return {
 }
 ```
   
-### Listing and reviewing issues
+### Subcommands and flags
   
-Subcommands and flags will be added in future versions, but right now all you have to do is type "brakoll" inside your current directory and all your issues within it and any children directories will be listed.
+With no arguments or flags, all the issues will be listed, sorted by priority and status.
   
 ``` terminal
 brakoll
+```
+  
+List number of issues with certain tags - list number of opened, closed and in-progress issues.
+  
+``` terminal
+brakoll summary
 ```
   
 **Typical terminal output**

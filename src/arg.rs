@@ -3,6 +3,7 @@ pub struct Arguments {
     // pub no_tui: bool,
     // pub location: String,
     pub help: bool,
+    pub summary: bool,
     // pub forecast: i32,
 }
 
@@ -11,6 +12,7 @@ pub fn parse() -> Arguments {
     // let mut no_tui = false;
     // let mut location = String::from("Stockholm");
     let mut help = false;
+    let mut summary = false;
     // let mut forecast = DEF_FORECAST;
     while let Some(arg) = it.next() {
         match arg.as_str() {
@@ -21,6 +23,9 @@ pub fn parse() -> Arguments {
             // }
             "help" | "-h" | "h" => {
                 help = true;
+            }
+            "summary" | "-s" | "s" => {
+                summary = true;
             }
             // "-t" => {
             //     no_tui = true;
@@ -46,6 +51,7 @@ pub fn parse() -> Arguments {
         // no_tui,
         // location,
         help,
+        summary,
         // forecast,
     }
 }

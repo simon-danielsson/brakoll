@@ -58,17 +58,27 @@ fn main() -> io::Result<()> {
 
     b.sort_list();
 
-    // *brakoll - d: implement -t <tag> flag to filter output of list() by tag, p: 50, t: feature, s: progress
-    // *brakoll - d: implement -s <status> flag to filter output of list() by status, p: 70, t: feature, s: closed
-
-    // apply filter flag
-    let filt_flag = b.args.filter_status.clone();
-    if filt_flag != None {
-        println!("Filter by status: {}", filt_flag.unwrap());
+    // *brakoll - d: implement -t <tag> flag to filter output of list() by tag, p: 50, t: feature, s: closed
+    // apply tag filter flag
+    let tag_flag = b.args.filter_tag.clone();
+    if !tag_flag.is_empty() {
+        println!("Filter by tag: {}", tag_flag);
         b.issues =
             b.issues.clone()
                 .into_iter()
-                .filter(|i| i.status == filt_flag.unwrap())
+                .filter(|i| i.tag.contains(&tag_flag))
+                .collect();
+    }
+
+    // *brakoll - d: implement -s <status> flag to filter output of list() by status, p: 70, t: feature, s: closed
+    // apply status filter flag
+    let stat_flag = b.args.filter_status.clone();
+    if stat_flag != None {
+        println!("Filter by status: {}", stat_flag.unwrap());
+        b.issues =
+            b.issues.clone()
+                .into_iter()
+                .filter(|i| i.status == stat_flag.unwrap())
                 .collect();
     }
 

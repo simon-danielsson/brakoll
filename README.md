@@ -87,31 +87,31 @@ return {
   
 ### Subcommands and flags
   
-With no arguments or flags, all the issues will be listed, sorted by priority and status.
+All the issues listed, sorted by priority and status:
   
 ``` terminal
 brakoll
 ```
 
-Filter issues by tag.
+Filter issues by tag:
   
 ``` terminal
 brakoll -t <tag>
 ```
 
-Filter issues by status.
+Filter issues by status:
   
 ``` terminal
 brakoll -s <status>
 ```
   
-List number of issues with certain tags - list number of opened, closed and in-progress issues.
+Summary of all issues:
   
 ``` terminal
 brakoll summary
 ```
   
-Display help and version information.
+Display help and version information:
   
 ``` terminal
 brakoll help

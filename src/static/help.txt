@@ -10,30 +10,22 @@ p: priority from 0 to infinity where the highest number is the most critical pri
 t: tag (optional - fallback: n/a)
 s: status [ (op)en | (pr)ogress | (cl)osed ] (optional - fallback: open)
 
-!!! IMPORTANT !!!
-
+Important:
 Issues are currently only single-line! If you want a long description, write it all on a single line or alternatively refer to a bigger document somewhere else inside your description. The prefix "*brakoll" is required but whatever is before it on the line is of no importance to the parser and will be ignored, e.g "#", "//", "--" or any other comment syntax.
 
-=== Arguments/flags - Issues ===
+=== Flags & Subcommands ===
 
-With no arguments or flags, all the issues will be listed, sorted by priority and status.
-
+All the issues listed, sorted by priority and status:
 $ brakoll
 
-Filter issues by status
-
-$ brakoll -s <status>
-
-Filter issues by tag
-
+Filter issues by tag:
 $ brakoll -s <tag>
 
-List number of issues with certain tags - list number of opened, closed and in-progress issues.
+Filter issues by status:
+$ brakoll -s <status>
 
+Summary of all issues:
 $ brakoll summary
 
-=== Arguments/flags - General ===
-
-Print this help text.
-
+Display help and version information:
 $ brakoll help

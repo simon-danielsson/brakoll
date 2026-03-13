@@ -31,7 +31,7 @@ Having a good method of tracking what's finished and what needs to be done is cr
   
 My goal with Brakoll was to create an issue tracker that is portable between machines and requires no setup, configuration-file, folder or specialty development-environment to use.
   
-(The name "Brakoll" is derived from the swedish word "koll", which is the act of surveying or scanning something.)
+(The name "Brakoll" is derived from the swedish saying "bra koll" - if someone is living their life with structure and purpose, a swedish person may say they have "bra koll".)
   
 The idea for this project was inspired directly by [this video](https://www.youtube.com/watch?v=8NdRGmp70Go).
   

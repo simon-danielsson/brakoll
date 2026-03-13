@@ -93,6 +93,12 @@ With no arguments or flags, all the issues will be listed, sorted by priority an
 brakoll
 ```
 
+Filter issues by tag.
+  
+``` terminal
+brakoll -t <tag>
+```
+
 Filter issues by status.
   
 ``` terminal

@@ -20,13 +20,17 @@ With no arguments or flags, all the issues will be listed, sorted by priority an
 
 $ brakoll
 
-List number of issues with certain tags - list number of opened, closed and in-progress issues.
-
-$ brakoll summary
-
 Filter issues by status
 
 $ brakoll -s <status>
+
+Filter issues by tag
+
+$ brakoll -s <tag>
+
+List number of issues with certain tags - list number of opened, closed and in-progress issues.
+
+$ brakoll summary
 
 === Arguments/flags - General ===
 

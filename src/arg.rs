@@ -4,15 +4,13 @@ use crate::IssueStatus;
 
 #[derive(PartialEq, Clone)]
 pub struct Arguments {
-    // pub no_tui: bool,
-    // pub location: String,
     pub help: bool,
     pub summary: bool,
+    pub no_rec: bool,
     pub filter_tag: String,
     pub filter_desc: String,
     pub filter_status: Option<IssueStatus>,
     pub opt_dir: PathBuf,
-    // pub forecast: i32,
 }
 
 pub fn parse() -> io::Result<Arguments> {
@@ -22,6 +20,7 @@ pub fn parse() -> io::Result<Arguments> {
     let mut filter_desc = String::new();
     let mut help = false;
     let mut summary = false;
+    let mut no_rec = false;
     let mut opt_dir = PathBuf::new();
     while let Some(arg) = it.next() {
         match arg.as_str() {
@@ -42,6 +41,10 @@ pub fn parse() -> io::Result<Arguments> {
                     .expect("No status was given after the \"-s\" flag.");
             }
 
+            "-r" => {
+                no_rec = true;
+            }
+
             "help" => {
                 help = true;
             }
@@ -50,17 +53,8 @@ pub fn parse() -> io::Result<Arguments> {
                 summary = true;
             }
 
-            // "-f" => {
-            //     // use next if some and parse to i32, else default
-            //     forecast = it
-            //         .next()
-            //         .as_deref()
-            //         .unwrap_or(format!("{}", DEF_FORECAST).as_str())
-            //         .parse::<i32>()
-            //         .unwrap_or(DEF_FORECAST);
-            // }
             other => {
-                opt_dir = PathBuf::from(other);
+                opt_dir = PathBuf::from(other); // optional target dir
                 break;
             }
         }
@@ -82,6 +76,7 @@ pub fn parse() -> io::Result<Arguments> {
     Ok(Arguments {
         help,
         summary,
+        no_rec,
         filter_tag: filter_tag.to_string(),
         filter_desc: filter_desc.to_string(),
         filter_status: status,

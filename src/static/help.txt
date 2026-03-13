@@ -33,6 +33,9 @@ $ brakoll -s <status>
 Filter issues by description:
 $ brakoll -d <keyword>
 
+Limit search to current directory (i.e. no recursion):
+$ brakoll -r
+
 Summary of all issues:
 $ brakoll summary
 

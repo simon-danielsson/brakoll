@@ -37,12 +37,13 @@ fn main() -> io::Result<()> {
     // *brakoll - d: add optional target path that can be added at the end of any command (with some logic to identify if the path is a path and/or it is valid) , p: 90, t: feature, s: closed
     // === init ===
     let mut b = Brakoll::new(args)?;
+    // set target dir
     if b.args.opt_dir.exists() {
         b.target_dir = PathBuf::from(b.args.opt_dir.clone());
     }
 
     // === search ===
-    // *brakoll - d: implement -r flag to have the program not search for issues in child directories (i.e non-recursive search), p: 20, t: feature, s: open
+    // *brakoll - d: implement -r flag to have the program not search for issues in child directories (i.e non-recursive search), p: 20, t: feature, s: progress
     println!("Searching for issues...");
     let files_found = b.walk_children()?;
 
@@ -165,6 +166,7 @@ impl Brakoll {
         })
     }
 
+    // *brakoll - d: refactor blacklist so that only a single one exists for both the count_search_items() function and the other one whatever that was called, p: 40, t: refactor, s: open
     fn count_search_items(&mut self) -> io::Result<usize> {
         let valid_file_extensions = utils::get_valid_file_ext();
 
@@ -176,7 +178,12 @@ impl Brakoll {
             ".git".to_string(),
         ];
 
-        let walker = WalkDir::new(&self.target_dir).into_iter();
+        let mut walker = WalkDir::new(&self.target_dir);
+        if self.args.no_rec {
+            walker = walker.max_depth(1);
+        }
+        let walker = walker.into_iter();
+
         let mut count = 0;
 
         for entry in walker.filter_entry(|e| !utils::should_ignore(e, &blacklist)) {
@@ -220,7 +227,12 @@ impl Brakoll {
             ".git".to_string(),
         ];
 
-        let walker = WalkDir::new(&self.target_dir).into_iter();
+        let mut walker = WalkDir::new(&self.target_dir);
+        if self.args.no_rec {
+            walker = walker.max_depth(1);
+        }
+        let walker = walker.into_iter();
+
         let mut valid_paths_found = Vec::new();
 
         for entry in walker.filter_entry(|e| !utils::should_ignore(e, &blacklist)) {

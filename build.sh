@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
 
 cargo build --release
-/Users/simondanielsson/dev/rust/brakoll/target/release/brakoll src
+/Users/simondanielsson/dev/rust/brakoll/target/release/brakoll -r
 

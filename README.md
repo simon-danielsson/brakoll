@@ -111,6 +111,12 @@ Filter issues by description:
 brakoll -d <keyword>
 ```
   
+Limit search to current directory (i.e. no recursion):
+  
+``` terminal
+brakoll -r
+```
+  
 Summary of all issues:
   
 ``` terminal

@@ -43,12 +43,21 @@ fn main() -> io::Result<()> {
     }
 
     // === search ===
-    // *brakoll - d: implement -r flag to have the program not search for issues in child directories (i.e non-recursive search), p: 20, t: feature, s: progress
+
+    let blacklist = vec![
+        "node_modules".to_string(),
+        "README".to_string(),
+        "target".to_string(),
+        ".cargo".to_string(),
+        ".git".to_string(),
+    ];
+
+    // *brakoll - d: implement -r flag to have the program not search for issues in child directories (i.e non-recursive search), p: 20, t: feature, s: closed
     println!("Searching for issues...");
-    let files_found = b.walk_children()?;
+    let files_found = b.walk_children(&blacklist)?;
 
     // === process ===
-    b.issues = b.process_issues(files_found);
+    b.issues = b.process_issues(&files_found);
 
     // === use results ===
 
@@ -166,18 +175,11 @@ impl Brakoll {
         })
     }
 
-    // *brakoll - d: refactor blacklist so that only a single one exists for both the count_search_items() function and the other one whatever that was called, p: 40, t: refactor, s: open
-    fn count_search_items(&mut self) -> io::Result<usize> {
+    // *brakoll - d: refactor blacklist so that only a single one exists for both the count_search_items() function and the other one whatever that was called, p: 40, t: refactor, s: closed
+    fn count_search_items(&mut self, blacklist: &Vec<String>) -> io::Result<usize> {
         let valid_file_extensions = utils::get_valid_file_ext();
 
-        let blacklist = vec![
-            "node_modules".to_string(),
-            "README".to_string(),
-            "target".to_string(),
-            ".cargo".to_string(),
-            ".git".to_string(),
-        ];
-
+        // init walker
         let mut walker = WalkDir::new(&self.target_dir);
         if self.args.no_rec {
             walker = walker.max_depth(1);
@@ -203,8 +205,8 @@ impl Brakoll {
     }
 
     /// returns paths to be searched for issues
-    fn walk_children(&mut self) -> io::Result<Vec<String>> {
-        let items_to_search = self.count_search_items()?;
+    fn walk_children(&mut self, blacklist: &Vec<String>) -> io::Result<Vec<String>> {
+        let items_to_search = self.count_search_items(&blacklist)?;
 
         // init loading bar
         let sout = stdout();
@@ -219,14 +221,7 @@ impl Brakoll {
 
         let valid_file_extensions = utils::get_valid_file_ext();
 
-        let blacklist = vec![
-            "node_modules".to_string(),
-            "README".to_string(),
-            "target".to_string(),
-            ".cargo".to_string(),
-            ".git".to_string(),
-        ];
-
+        // init walker
         let mut walker = WalkDir::new(&self.target_dir);
         if self.args.no_rec {
             walker = walker.max_depth(1);
@@ -267,7 +262,7 @@ impl Brakoll {
         Ok(valid_paths_found)
     }
 
-    fn process_issues(&mut self, files_found: Vec<String>) -> Vec<Issue> {
+    fn process_issues(&mut self, files_found: &Vec<String>) -> Vec<Issue> {
         let mut parsed_issues = Vec::new();
 
         for f in files_found {

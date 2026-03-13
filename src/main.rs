@@ -27,6 +27,7 @@ const DEF_STAT: IssueStatus = IssueStatus::Open;
 fn main() -> io::Result<()> {
     // === get args ===
 
+    // *brakoll - d: the status change command adds a newline at the end of every file it adjusts issues inside, p: 10, t: bug, s: open
     // *brakoll - d: add command to copy "tag: desc" of an issue with maybe "brakoll copy <id>" for quicker git commit messages, p: 80, t: feature, s: prog
     // *brakoll - d: implement close/open/prog command with id number to allow user to change status of issues from commandline (implement dynamic id application), p: 20, t: feature, s: closed
     let args = arg::parse()?;
@@ -491,4 +492,3 @@ impl Brakoll {
             .collect()
     }
 }
-

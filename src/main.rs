@@ -44,7 +44,6 @@ fn main() -> io::Result<()> {
     b.issues = b.process_issues(files_found);
 
     // === use results ===
-    // *brakoll - d: color formatting depending on status (perhaps green=done yellow=prog blue=open), p: 0, t: feature, s: open
 
     if b.issues.is_empty() {
         utils::issues_found_print(b.issues.len());
@@ -82,6 +81,7 @@ fn main() -> io::Result<()> {
                 .collect();
     }
 
+    // *brakoll - d: color formatting depending on status (perhaps green=done yellow=prog blue=open), p: 0, t: feature, s: closed
     b.list();
     Ok(())
 }
@@ -94,6 +94,15 @@ enum IssueStatus {
 }
 
 impl IssueStatus {
+    /// (header<&str>, ansi_color<&str>)
+    fn attr(&self) -> (&str, &str) {
+        match self {
+            IssueStatus::Closed => ("===", "\x1b[32m"),
+            IssueStatus::Open => ("***", "\x1b[34m"),
+            IssueStatus::InProgress => ("!!!", "\x1b[31m"),
+        }
+    }
+
     fn rank(&self) -> u8 {
         match self {
             IssueStatus::Closed => 0,
@@ -323,8 +332,13 @@ impl Brakoll {
 
         println!("\nstatus");
         println!("-------");
+        let color_end: String = "\x1b[0m".to_string();
         for (t, count) in status {
-            println!("{count}\t: {}", t);
+            println!(
+                "{color_start}{count}\t: {status}{color_end}",
+                color_start = t.attr().1,
+                status = t
+            );
         }
     }
 
@@ -335,15 +349,15 @@ impl Brakoll {
         utils::issues_found_print(len);
         println!("");
         for i in self.issues.iter_mut() {
-            println!(
-                "{h} {p}: {s} {h}",
-                p = i.prio,
-                s = i.status,
-                h = utils::issue_header_decor(&i.status)
-            );
+            let attr = i.status.attr();
+            let color_end: String = "\x1b[0m".to_string();
+
+            print!("{}", attr.1);
+            println!("{h} {p}: {s} {h}", p = i.prio, s = i.status, h = attr.0,);
             println!("file: {}", i.file);
             println!("line: {l}, tag: {t}", l = i.line, t = i.tag);
             println!("desc: {}", i.desc);
+            print!("{}", color_end);
             println!("");
         }
     }

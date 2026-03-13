@@ -8,7 +8,7 @@ use crossterm::{
     cursor::{self, MoveTo},
     event::{self, Event, KeyCode, KeyEvent, KeyModifiers, poll},
     execute,
-    terminal::{self, Clear, ClearType, disable_raw_mode, enable_raw_mode},
+    terminal::{Clear, ClearType, disable_raw_mode, enable_raw_mode},
 };
 
 const LOADING_BAR_SIZE: i32 = 30;

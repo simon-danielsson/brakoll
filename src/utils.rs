@@ -5,7 +5,7 @@ use walkdir::DirEntry;
 
 use crate::IssueStatus;
 
-const VALID_FILE_EXT: &str = include_str!("./valid_file_ext");
+const VALID_FILE_EXT: &str = include_str!("./static/valid_file_ext");
 
 /// derive vec or file ext from file in src dir
 pub fn get_valid_file_ext() -> Vec<String> {
@@ -39,15 +39,6 @@ pub fn issues_found_print(l: usize) {
         _ => {
             println!("{} issues were found.", l);
         }
-    }
-}
-
-/// helper for list()
-pub fn issue_header_decor(i: &IssueStatus) -> &str {
-    match i {
-        IssueStatus::Open => return "***",
-        IssueStatus::InProgress => return "!!!",
-        IssueStatus::Closed => return "===",
     }
 }
 

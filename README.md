@@ -96,30 +96,6 @@ List number of issues with certain tags - list number of opened, closed and in-p
 brakoll summary
 ```
   
-**Typical terminal output**
-  
-``` terminal
-3 issues were found.
-
-=== 10: closed ===
-file: ~/dev/my_awesome_project/src/api.rs
-line: 426, tag: refactor
-desc: query parser for-loop
-
-*** 0: open ***
-file: ~/dev/my_awesome_project/src/main.rs
-line: 108, tag: debug
-desc: fix formatting issue in debug statement
-
-/// 7: in progress ///
-file: ~/dev/my_awesome_project/src/utils/tools.rs
-line: 18, tag: refactor
-desc: abstract structs
-
-3 issues were found.
-```
-
-
 ---
 <div id="license"></div>
 

@@ -1,0 +1,16 @@
+[0] closed
+~/dev/rust/brakoll/src/main.rs:378
+feature: add sorting logic to list() function
+
+[1] 50 - in progress
+~/dev/rust/brakoll/src/main.rs:377
+feature: closed issues shouldn't be displaying a priority number
+
+[3] 0 - open
+~/dev/rust/brakoll/src/main.rs:35
+feature: tree subcommand for more visual feedback on where issues are on the file system
+
+*brakoll - d: i want to change this, p: 100, t: change, s: closed
+[4] 40 - open
+~/dev/rust/brakoll/src/main.rs:85
+bug: loadingbar is not rendering properly and looks quite ugly

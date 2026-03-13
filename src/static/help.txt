@@ -39,5 +39,18 @@ $ brakoll -r
 Summary of all issues:
 $ brakoll summary
 
+Close issue through CLI:
+$ brakoll close <id>
+$ brakoll cl <id>
+
+Open issue through CLI:
+$ brakoll open <id>
+$ brakoll op <id>
+
+Progress issue through CLI:
+$ brakoll prog <id>
+$ brakoll pr <id>
+$ brakoll progress <id>
+
 Display help and version information:
 $ brakoll help

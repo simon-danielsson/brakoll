@@ -27,6 +27,7 @@ const DEF_STAT: IssueStatus = IssueStatus::Open;
 fn main() -> io::Result<()> {
     // === get args ===
 
+    // *brakoll - d: implement close/open/prog command with id number to allow user to change status of issues from commandline (implement dynamic id application), p: 20, t: feature, s: closed
     let args = arg::parse()?;
     if args.help {
         help::print();
@@ -72,6 +73,28 @@ fn main() -> io::Result<()> {
         return Ok(());
     }
 
+    // change status if appropr. flag was added
+    if b.args.change_status.1 != None {
+        if b.args.change_status.0 == 0 {
+            println!("Invalid ID! Status change was cancelled.");
+            return Ok(());
+        }
+        match b.change_status_of_issue()? {
+            false => {
+                println!("Invalid ID! Status change was cancelled.");
+                return Ok(());
+            }
+            true => {
+                println!(
+                    "Changed status of issue [{}] to \"{}\"",
+                    b.args.change_status.0,
+                    b.args.change_status.1.unwrap()
+                );
+                return Ok(());
+            }
+        }
+    }
+
     // filter & sort
     b.apply_filter_flags_to_issues_list();
     b.sort_list();
@@ -89,12 +112,11 @@ enum IssueStatus {
 }
 
 impl IssueStatus {
-    /// (header<&str>, ansi_color<&str>)
-    fn attr(&self) -> (&str, &str) {
+    fn color(&self) -> &str {
         match self {
-            IssueStatus::Closed => ("===", "\x1b[32m"),
-            IssueStatus::Open => ("***", "\x1b[34m"),
-            IssueStatus::InProgress => ("!!!", "\x1b[31m"),
+            IssueStatus::Closed => "\x1b[32m",
+            IssueStatus::Open => "\x1b[34m",
+            IssueStatus::InProgress => "\x1b[31m",
         }
     }
 
@@ -126,6 +148,7 @@ struct Issue {
     prio: u32,
     tag: String,
     status: IssueStatus,
+    id: u32,
 }
 
 struct Brakoll {
@@ -141,6 +164,56 @@ impl Brakoll {
             issues: Vec::new(),
             args,
         })
+    }
+
+    /// change status if appropr. flag was added
+    fn change_status_of_issue(&mut self) -> io::Result<bool> {
+        // find issue in self vector
+        let mut issues = self
+            .issues
+            .iter()
+            .filter(|i| i.id == self.args.change_status.0)
+            .take(2);
+        let issue = match (issues.next(), issues.next()) {
+            (Some(issue), None) => issue, // exactly one
+            _ => return Ok(false),        // zero or more than one
+        };
+
+        let content = fs::read_to_string(&issue.file)?;
+        let mut lines: Vec<String> = content.lines().map(|s| s.to_string()).collect();
+
+        if issue.line == 0 || issue.line > lines.len() {
+            return Err(io::Error::new(
+                io::ErrorKind::InvalidInput,
+                format!("Line {} is out of range!", issue.line),
+            ));
+        }
+
+        let line = &mut lines[issue.line - 1];
+        let old_status: String = issue.status.to_string();
+
+        if !line.contains("s:") {
+            return Err(io::Error::new(
+                io::ErrorKind::InvalidInput,
+                format!(
+                    "Status {} was not found on line {}!",
+                    old_status, issue.line
+                ),
+            ));
+        }
+
+        let new_status: String = self.args.change_status.1.unwrap().to_string();
+
+        *line = if let Some(pos) = line.find("s:") {
+            format!("{}s: {}", &line[..pos], &new_status)
+        } else {
+                line.to_string()
+            };
+
+        let new_content = lines.join("\n");
+        fs::write(&issue.file, new_content)?;
+
+        return Ok(true);
     }
 
     fn apply_filter_flags_to_issues_list(&mut self) {
@@ -273,6 +346,8 @@ impl Brakoll {
     fn process_issues(&mut self, files_found: &Vec<String>) -> Vec<Issue> {
         let mut parsed_issues = Vec::new();
 
+        let mut id_counter: u32 = 1;
+
         for f in files_found {
             let raw_issues = self.find_issues(&f);
 
@@ -318,13 +393,16 @@ impl Brakoll {
 
                 let prio = p_as_str.parse::<u32>().unwrap_or(DEF_PRIO);
 
+                id_counter += 1;
+
                 parsed_issues.push(Issue {
-                    file: utils::shorten_path(f.clone()),
+                    file: f.clone(),
                     line: line_no,
                     desc: d.to_string(),
                     prio,
                     tag: t.to_string(),
                     status,
+                    id: id_counter,
                 });
             }
         }
@@ -347,33 +425,29 @@ impl Brakoll {
         }
 
         // sort
-
         let mut tags: Vec<_> = tag_counts.into_iter().collect();
         tags.sort_by_key(|(_, c)| std::cmp::Reverse(*c));
-
         let mut status: Vec<_> = status_counts.into_iter().collect();
         status.sort_by_key(|(_, c)| std::cmp::Reverse(*c));
 
         // print
-
         println!("tags");
         println!("-------");
         for (tag, count) in tags {
             println!("{count}\t: {tag}");
         }
-
         println!("\nstatus");
         println!("-------");
-        let color_end: String = "\x1b[0m".to_string();
         for (t, count) in status {
             println!(
-                "{color_start}{count}\t: {status}{color_end}",
-                color_start = t.attr().1,
+                "{color_start}{count}\t: {status}\x1b[0m",
+                color_start = t.color(),
                 status = t
             );
         }
     }
 
+    // *brakoll - d: overhaul formatting of issues in list() according to test.txt in root, p: 90, t: feature, s: closed
     // *brakoll - d: add sorting logic to list() function, p: 100, t: feature, s: closed
     /// list all issues found
     fn list(&mut self) {
@@ -381,15 +455,19 @@ impl Brakoll {
         utils::issues_found_print(len);
         println!("");
         for i in self.issues.iter_mut() {
-            let attr = i.status.attr();
-            let color_end: String = "\x1b[0m".to_string();
-
-            print!("{}", attr.1);
-            println!("{h} {p}: {s} {h}", p = i.prio, s = i.status, h = attr.0,);
-            println!("file: {}", i.file);
-            println!("line: {l}, tag: {t}", l = i.line, t = i.tag);
-            println!("desc: {}", i.desc);
-            print!("{}", color_end);
+            print!("{}", i.status.color());
+            if i.status == IssueStatus::Closed {
+                println!("[{i}] {s}", i = i.id, s = i.status);
+            } else {
+                println!("[{i}] {p} - {s}", i = i.id, p = i.prio, s = i.status);
+            }
+            println!(
+                "{f}:{l}",
+                f = utils::shorten_path(i.file.clone()),
+                l = i.line
+            );
+            println!("{t}: {d}", t = i.tag, d = i.desc);
+            print!("{}", "\x1b[0m");
             println!("");
         }
     }

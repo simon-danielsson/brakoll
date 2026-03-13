@@ -136,6 +136,29 @@ Summary of all issues:
 brakoll summary
 ```
   
+Close issue through CLI:
+  
+``` terminal
+brakoll close <id>
+brakoll cl <id>
+```
+  
+Open issue through CLI:
+  
+``` terminal
+brakoll open <id>
+brakoll op <id>
+```
+
+Progress issue through CLI:
+  
+``` terminal
+brakoll prog <id>
+brakoll pr <id>
+brakoll progress <id>
+```
+  
+  
 Display help and version information:
   
 ``` terminal

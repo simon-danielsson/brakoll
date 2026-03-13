@@ -11,6 +11,8 @@ pub struct Arguments {
     pub filter_desc: String,
     pub filter_status: Option<IssueStatus>,
     pub opt_dir: PathBuf,
+    /// (id<u32>, status to switch to<Option<IssueStatus>>)
+    pub change_status: (u32, Option<IssueStatus>),
 }
 
 pub fn parse() -> io::Result<Arguments> {
@@ -22,6 +24,11 @@ pub fn parse() -> io::Result<Arguments> {
     let mut summary = false;
     let mut no_rec = false;
     let mut opt_dir = PathBuf::new();
+
+    // status change subc vars
+    let mut status_ch_status: Option<IssueStatus> = None;
+    let mut status_ch_id: u32 = 0;
+
     while let Some(arg) = it.next() {
         match arg.as_str() {
             "-t" => {
@@ -47,6 +54,35 @@ pub fn parse() -> io::Result<Arguments> {
 
             "help" => {
                 help = true;
+            }
+
+            // change status of issue acc. to id
+            "open" | "op" => {
+                status_ch_status = Some(IssueStatus::Open);
+                status_ch_id = it
+                    .next()
+                    .as_deref()
+                    .unwrap_or(format!("{}", 0).as_str())
+                    .parse::<u32>()
+                    .unwrap_or(0);
+            }
+            "close" | "cl" => {
+                status_ch_status = Some(IssueStatus::Closed);
+                status_ch_id = it
+                    .next()
+                    .as_deref()
+                    .unwrap_or(format!("{}", 0).as_str())
+                    .parse::<u32>()
+                    .unwrap_or(0);
+            }
+            "progress" | "pr" | "prog" => {
+                status_ch_status = Some(IssueStatus::InProgress);
+                status_ch_id = it
+                    .next()
+                    .as_deref()
+                    .unwrap_or(format!("{}", 0).as_str())
+                    .parse::<u32>()
+                    .unwrap_or(0);
             }
 
             "summary" => {
@@ -81,5 +117,6 @@ pub fn parse() -> io::Result<Arguments> {
         filter_desc: filter_desc.to_string(),
         filter_status: status,
         opt_dir,
+        change_status: (status_ch_id, status_ch_status),
     })
 }

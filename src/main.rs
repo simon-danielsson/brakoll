@@ -71,42 +71,9 @@ fn main() -> io::Result<()> {
         return Ok(());
     }
 
+    // filter & sort
+    b.apply_filter_flags_to_issues_list();
     b.sort_list();
-
-    // *brakoll - d: implement -d <word(s)> to filter output of list() by desc, p: 100, t: feature, s: closed
-    let desc_flag = b.args.filter_desc.clone();
-    if !desc_flag.is_empty() {
-        println!("Filter by desc: {}", desc_flag);
-        b.issues =
-            b.issues.clone()
-                .into_iter()
-                .filter(|i| i.desc.contains(&desc_flag))
-                .collect();
-    }
-
-    // *brakoll - d: implement -t <tag> flag to filter output of list() by tag, p: 50, t: feature, s: closed
-    // apply tag filter flag
-    let tag_flag = b.args.filter_tag.clone();
-    if !tag_flag.is_empty() {
-        println!("Filter by tag: {}", tag_flag);
-        b.issues =
-            b.issues.clone()
-                .into_iter()
-                .filter(|i| i.tag.contains(&tag_flag))
-                .collect();
-    }
-
-    // *brakoll - d: implement -s <status> flag to filter output of list() by status, p: 70, t: feature, s: closed
-    // apply status filter flag
-    let stat_flag = b.args.filter_status.clone();
-    if stat_flag != None {
-        println!("Filter by status: {}", stat_flag.unwrap());
-        b.issues =
-            b.issues.clone()
-                .into_iter()
-                .filter(|i| i.status == stat_flag.unwrap())
-                .collect();
-    }
 
     // *brakoll - d: color formatting depending on status (perhaps green=done yellow=prog blue=open), p: 0, t: feature, s: closed
     b.list();
@@ -173,6 +140,46 @@ impl Brakoll {
             issues: Vec::new(),
             args,
         })
+    }
+
+    fn apply_filter_flags_to_issues_list(&mut self) {
+        // *brakoll - d: implement -d <word(s)> to filter output of list() by desc, p: 100, t: feature, s: closed
+        let desc_flag = self.args.filter_desc.clone();
+        if !desc_flag.is_empty() {
+            println!("Filter by desc: {}", desc_flag);
+            self.issues = self
+                .issues
+                .clone()
+                .into_iter()
+                .filter(|i| i.desc.contains(&desc_flag))
+                .collect();
+        }
+
+        // *brakoll - d: implement -t <tag> flag to filter output of list() by tag, p: 50, t: feature, s: closed
+        // apply tag filter flag
+        let tag_flag = self.args.filter_tag.clone();
+        if !tag_flag.is_empty() {
+            println!("Filter by tag: {}", tag_flag);
+            self.issues = self
+                .issues
+                .clone()
+                .into_iter()
+                .filter(|i| i.tag.contains(&tag_flag))
+                .collect();
+        }
+
+        // *brakoll - d: implement -s <status> flag to filter output of list() by status, p: 70, t: feature, s: closed
+        // apply status filter flag
+        let stat_flag = self.args.filter_status.clone();
+        if stat_flag != None {
+            println!("Filter by status: {}", stat_flag.unwrap());
+            self.issues = self
+                .issues
+                .clone()
+                .into_iter()
+                .filter(|i| i.status == stat_flag.unwrap())
+                .collect();
+        }
     }
 
     // *brakoll - d: refactor blacklist so that only a single one exists for both the count_search_items() function and the other one whatever that was called, p: 40, t: refactor, s: closed

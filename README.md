@@ -29,7 +29,7 @@
   
 Having a good method of tracking what's finished and what needs to be done is crucial once a project grows large enough. Of course, for team-driven development having a full-featured issue tracker such as GitHub or similar is preferable, but for solo-developers GitHub can feel like an over-engineered solution to a simple problem.
   
-My goal with Brakoll was to create an issue tracker that is portable between machines and requires no setup, configuration-file, folder or specialty development-environment to use.
+My goal with Brakoll was to create an issue tracker that is portable between machines and requires no setup, configuration-file, folder or a specialty development-environment to use.
   
 (The name "Brakoll" is derived from the swedish saying "bra koll" - if someone is living their life with structure and purpose, a swedish person may say they have "bra koll".)
   

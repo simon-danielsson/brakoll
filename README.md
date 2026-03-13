@@ -119,3 +119,4 @@ This project is licensed under the [MIT License](https://github.com/simon-daniel
 ## 🛠 Dependencies
   
 - [walkdir](https://github.com/BurntSushi/walkdir)  
+- [dirs](https://codeberg.org/dirs/dirs-rs)  

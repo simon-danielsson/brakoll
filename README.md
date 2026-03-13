@@ -59,7 +59,7 @@ fn debug() {
 ```
   
 - d: description of the issue (obligatory)
-- p: priority from 0 to infinity where the highest number is the most critical priority (optional - fallback: 0)
+p: priority from 0 to infinity where the highest number takes priority (optional - fallback: 0)
 - t: tag (optional - fallback: n/a)
 - s: status [ (op)en | (pr)ogress | (cl)osed ] (optional - fallback: open)
   

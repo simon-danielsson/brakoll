@@ -57,6 +57,8 @@ fn main() -> io::Result<()> {
 
     b.sort_list();
 
+    // *brakoll - d: add filter by desc, p: 100, t: feature, s: progress
+
     // *brakoll - d: implement -t <tag> flag to filter output of list() by tag, p: 50, t: feature, s: closed
     // apply tag filter flag
     let tag_flag = b.args.filter_tag.clone();

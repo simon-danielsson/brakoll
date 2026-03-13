@@ -1,4 +1,7 @@
+use std::path::Path;
+
 use dirs::home_dir;
+use walkdir::DirEntry;
 
 use crate::IssueStatus;
 
@@ -28,7 +31,7 @@ pub fn shorten_path(path: String) -> String {
 pub fn issues_found_print(l: usize) {
     match l {
         0 => {
-            println!("No issues were found.");
+            print!("No issues were found.");
         }
         1 => {
             println!("1 issue was found.");
@@ -46,4 +49,24 @@ pub fn issue_header_decor(i: &IssueStatus) -> &str {
         IssueStatus::InProgress => return "///",
         IssueStatus::Closed => return "===",
     }
+}
+
+pub fn has_hidden_component(path: &Path) -> bool {
+    path.components().any(|component| {
+        component
+            .as_os_str()
+            .to_str()
+            .map(|s| s.starts_with('.'))
+            .unwrap_or(false)
+    })
+}
+
+pub fn contains_blacklisted_path(path: &Path, blacklist: &[String]) -> bool {
+    let path_str = path.to_string_lossy();
+    blacklist.iter().any(|needle| path_str.contains(needle))
+}
+
+pub fn should_ignore(entry: &DirEntry, blacklist: &[String]) -> bool {
+    let path = entry.path();
+    has_hidden_component(path) || contains_blacklisted_path(path, blacklist)
 }

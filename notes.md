@@ -2,7 +2,6 @@
 
 **todo**
 - [ ] add status filter flags for the list() function (i.e. "brakoll -s o/p/c")
-- [ ] implement a loading animation during search for issues
 - [ ] sort the issues list before the list() function 
     1. the issues with "done" status should be printed absolutely first in order of priority (those with lowest priority first)
     2. the issues with "todo" status should be printed last in order of priority
@@ -10,6 +9,7 @@
 - [ ] one cool thing would be a "tree" subcommand so that the user can see more visually in which files the most issues exist
 
 **done**
+- [x] implement a loading animation during search for issues
 - [x] add "summary" subcommand to get a list of how many issues of each tag exist
 - [x] add "help/-h/--help" subcommand as well as showing the help at failed flag parse
 - [x] instead of todo/done, i could instead do open/prog/clos to replicate a more regular issue tracker (this will have to be decided now first before any other features are implemented)

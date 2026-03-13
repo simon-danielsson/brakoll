@@ -1,14 +1,18 @@
+use crossterm::cursor;
 use std::collections::HashMap;
-use std::fmt;
 use std::fs::read_to_string;
-use std::path::Path;
+use std::io::{Write, stdout};
+use std::time::Duration;
 use std::{env, io};
-use walkdir::{DirEntry, WalkDir};
+use std::{fmt, thread};
+use walkdir::WalkDir;
 
 use crate::arg::Arguments;
+use crate::loading_bar::{LoadingBar, State};
 
 mod arg;
 mod help;
+mod loading_bar;
 mod utils;
 
 const PREFIX: &str = "*brakoll";
@@ -22,7 +26,8 @@ const DEF_STAT: IssueStatus = IssueStatus::Open;
 // === program ===
 
 fn main() -> io::Result<()> {
-    // get args
+    // === get args ===
+
     let args = arg::parse();
     if args.help {
         help::print();
@@ -30,14 +35,22 @@ fn main() -> io::Result<()> {
     }
     // *brakoll - d: test, p: 0, t: example, s: in progress
 
-    // init app
+    // === init ===
     let mut b = Brakoll::new(args);
 
-    // get issues
+    // === search ===
+    println!("Searching for issues...");
     let files_found = b.walk_children()?;
+    if files_found.is_empty() {
+        utils::issues_found_print(b.issues.len());
+        return Ok(());
+    }
+
+    // === process ===
     b.issues = b.process_issues(files_found);
 
-    // display issues
+    // === use results ===
+
     if b.issues.is_empty() {
         utils::issues_found_print(b.issues.len());
         return Ok(());
@@ -93,28 +106,54 @@ impl Brakoll {
         }
     }
 
-    fn has_hidden_component(&mut self, path: &Path) -> bool {
-        path.components().any(|component| {
-            component
-                .as_os_str()
-                .to_str()
-                .map(|s| s.starts_with('.'))
-                .unwrap_or(false)
-        })
-    }
+    fn count_search_items(&mut self) -> io::Result<usize> {
+        let cd = env::current_dir()?;
+        let valid_file_extensions = utils::get_valid_file_ext();
 
-    fn contains_blacklisted_path(&mut self, path: &Path, blacklist: &[String]) -> bool {
-        let path_str = path.to_string_lossy();
-        blacklist.iter().any(|needle| path_str.contains(needle))
-    }
+        let blacklist = vec![
+            "node_modules".to_string(),
+            "target".to_string(),
+            ".cargo".to_string(),
+            ".git".to_string(),
+        ];
 
-    fn should_ignore(&mut self, entry: &DirEntry, blacklist: &[String]) -> bool {
-        let path = entry.path();
-        self.has_hidden_component(path) || self.contains_blacklisted_path(path, blacklist)
+        let walker = WalkDir::new(&cd).into_iter();
+        let mut count = 0;
+
+        for entry in walker.filter_entry(|e| !utils::should_ignore(e, &blacklist)) {
+            let entry = entry?;
+            let path = entry.path();
+
+            if path.is_file() {
+                if let Some(ext) = path.extension().and_then(|s| s.to_str()) {
+                    if valid_file_extensions.iter().any(|e| e == ext) {
+                        count += 1;
+                    }
+                }
+            }
+        }
+
+        Ok(count)
     }
 
     /// returns paths to be searched for issues
     fn walk_children(&mut self) -> io::Result<Vec<String>> {
+        let items_to_search = self.count_search_items()?;
+        if items_to_search == 0 {
+            return Ok(Vec::new());
+        }
+
+        // init loading bar
+        let sout = stdout();
+        let init_cursor_pos = cursor::position()?;
+        let mut lb = LoadingBar::new(
+            sout,
+            items_to_search as i32,
+            init_cursor_pos.0,
+            init_cursor_pos.1 + 1,
+        );
+        lb.util_setup()?;
+
         let cd = env::current_dir()?;
         let valid_file_extensions = utils::get_valid_file_ext();
 
@@ -128,7 +167,12 @@ impl Brakoll {
         let walker = WalkDir::new(&cd).into_iter();
         let mut valid_paths_found = Vec::new();
 
-        for entry in walker.filter_entry(|e| !self.should_ignore(e, &blacklist)) {
+        for entry in walker.filter_entry(|e| !utils::should_ignore(e, &blacklist)) {
+            lb.controls()?;
+            if lb.state == State::Quit {
+                break;
+            }
+
             let entry = entry?;
             let path = entry.path();
 
@@ -139,7 +183,19 @@ impl Brakoll {
                     }
                 }
             }
+            lb.processed_counter += 1;
+            if lb.processed_counter <= lb.files_to_process as i32 {
+                lb.loading_bar()?;
+                lb.sout.flush()?;
+            } else {
+                lb.state = State::Quit;
+            }
+
+            thread::sleep(Duration::from_secs(1));
         }
+
+        lb.util_cleanup()?;
+        println!("");
 
         Ok(valid_paths_found)
     }

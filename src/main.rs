@@ -44,6 +44,7 @@ fn main() -> io::Result<()> {
     b.issues = b.process_issues(files_found);
 
     // === use results ===
+    // *brakoll - d: color formatting depending on status (perhaps green=done yellow=prog blue=open), p: 0, t: feature, s: open
 
     if b.issues.is_empty() {
         utils::issues_found_print(b.issues.len());
@@ -57,15 +58,27 @@ fn main() -> io::Result<()> {
         return Ok(());
     }
 
+    b.sort_list();
+
     b.list();
     Ok(())
 }
 
 #[derive(Debug, Eq, Hash, PartialEq)]
 enum IssueStatus {
+    Closed,
     Open,
     InProgress,
-    Closed,
+}
+
+impl IssueStatus {
+    fn rank(&self) -> u8 {
+        match self {
+            IssueStatus::Closed => 0,
+            IssueStatus::Open => 1,
+            IssueStatus::InProgress => 2,
+        }
+    }
 }
 
 impl fmt::Display for IssueStatus {
@@ -293,7 +306,7 @@ impl Brakoll {
         }
     }
 
-    // *brakoll - d: add sorting logic to list() function, p: 100, t: feature, s: open
+    // *brakoll - d: add sorting logic to list() function, p: 100, t: feature, s: closed
     /// list all issues found
     fn list(&mut self) {
         let len = self.issues.len();
@@ -313,8 +326,12 @@ impl Brakoll {
         }
     }
 
-    /// returns line beginning with prefix and derives usize(line #) and String (raw issue line)
+    fn sort_list(&mut self) {
+        self.issues.sort_by(|a, b| a.prio.cmp(&b.prio));
+        self.issues.sort_by_key(|t| t.status.rank());
+    }
 
+    /// returns line beginning with prefix and derives usize(line #) and String (raw issue line)
     fn find_issues(&mut self, filename: &String) -> Vec<(usize, String)> {
         let bytes = fs::read(filename).unwrap();
         let content = String::from_utf8_lossy(&bytes);

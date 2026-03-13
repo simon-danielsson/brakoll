@@ -48,9 +48,6 @@ impl LoadingBar {
         let text = format!("{}/{} ", self.processed_counter, self.files_to_process);
         self.sout.write(text.as_bytes())?;
 
-        // filled = floor((current_progress / total_work) * bar_width)
-        // empty = bar_width - filled
-
         // === increment loading bar ===
         self.move_to_loading_bar_beginning(&text, 0)?;
         self.sout.write("".as_bytes())?;

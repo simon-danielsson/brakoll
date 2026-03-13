@@ -31,6 +31,8 @@ Having a good method of tracking what's finished and what needs to be done is cr
   
 (The name "Brakoll" is derived from the swedish word "koll", which is the act of surveying or scanning something.)
   
+The idea for this project was inspired directly by [this video](https://www.youtube.com/watch?v=8NdRGmp70Go).
+  
 ---
 <div id="install"></div>
 

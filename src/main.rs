@@ -40,10 +40,6 @@ fn main() -> io::Result<()> {
     // === search ===
     println!("Searching for issues...");
     let files_found = b.walk_children()?;
-    if files_found.is_empty() {
-        utils::issues_found_print(b.issues.len());
-        return Ok(());
-    }
 
     // === process ===
     b.issues = b.process_issues(files_found);
@@ -138,9 +134,6 @@ impl Brakoll {
     /// returns paths to be searched for issues
     fn walk_children(&mut self) -> io::Result<Vec<String>> {
         let items_to_search = self.count_search_items()?;
-        if items_to_search == 0 {
-            return Ok(Vec::new());
-        }
 
         // init loading bar
         let sout = stdout();

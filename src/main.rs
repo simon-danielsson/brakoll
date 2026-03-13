@@ -1,4 +1,3 @@
-use dirs::home_dir;
 use std::fmt;
 use std::fs::read_to_string;
 use std::path::Path;
@@ -12,7 +11,6 @@ const PREFIX: &str = "*brakoll";
 
 // === default values for issues ===
 const DEF_DESC: &str = "issue";
-// default prio if it is both missing or invalid (i.e. -2 or 101)
 const DEF_PRIO: u32 = 0;
 const DEF_TAG: &str = "n/a";
 const DEF_STAT: IssueStatus = IssueStatus::Open;
@@ -188,7 +186,7 @@ impl Brakoll {
                     p = p_as_str.parse::<u32>().unwrap_or_default();
                 }
 
-                let f_sh = self.shorten_path(f.clone());
+                let f_sh = utils::shorten_path(f.clone());
 
                 parsed_issues.push(Issue {
                     file: f_sh,
@@ -255,15 +253,5 @@ impl Brakoll {
             .filter(|(_, line)| line.contains("d:"))
             .map(|(i, line)| (i + 1, line.to_owned()))
             .collect()
-    }
-
-    fn shorten_path(&mut self, path: String) -> String {
-        if let Some(home) = home_dir() {
-            let home = home.to_string_lossy();
-            if path.starts_with(home.as_ref()) {
-                return path.replacen(home.as_ref(), "~", 1);
-            }
-        }
-        path
     }
 }

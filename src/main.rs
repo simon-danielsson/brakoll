@@ -31,7 +31,7 @@ fn main() -> io::Result<()> {
         help::print();
         return Ok(());
     }
-    // *brakoll - d: test, p: 0, t: example, s: in progress
+    // *brakoll - d: tree subcommand for more visual feedback on where issues are on the file system, p: 0, t: feature, s: open
 
     // === init ===
     let mut b = Brakoll::new(args);
@@ -50,6 +50,8 @@ fn main() -> io::Result<()> {
         return Ok(());
     };
 
+    // *brakoll - d: implement -t <tag> flag to filter output of summary() by tag, p: 50, t: feature, s: open
+    // *brakoll - d: implement -s <status> flag to filter output of summary() by status, p: 70, t: feature, s: open
     if b.args.summary {
         b.summary();
         return Ok(());
@@ -191,87 +193,60 @@ impl Brakoll {
     }
 
     fn process_issues(&mut self, files_found: Vec<String>) -> Vec<Issue> {
-        let mut parsed_issues: Vec<Issue> = Vec::new();
+        let mut parsed_issues = Vec::new();
 
         for f in files_found {
             let raw_issues = self.find_issues(&f);
 
-            // example:
-            // *brakoll - d: fix formatting issue in debug statement, p: 10, t: debug, s: open
-            for i in raw_issues {
-                let mut d = "";
-                let mut t = "";
+            for (line_no, raw_line) in raw_issues {
+                let mut d = DEF_DESC;
+                let mut t = DEF_TAG;
                 let mut s_as_str = "";
                 let mut p_as_str = "";
 
-                {
-                    let mut string = "";
+                let string = if let Some(pos) = raw_line.find("d:") {
+                    &raw_line[pos..]
+                } else {
+                    ""
+                };
 
-                    if let Some(pos) = i.1.find("d:") {
-                        string = &i.1[pos..];
-                    }
+                for pair in string.split(',') {
+                    let Some((key, value)) = pair.trim().split_once(':') else {
+                        continue;
+                    };
 
-                    for pair in string.split(',') {
-                        let mut parts = pair.trim().splitn(2, ':');
-                        let key = parts.next().unwrap().trim();
-                        let value = parts.next().unwrap().trim();
-
-                        match key {
-                            "t" => t = value,
-                            "d" => d = value,
-                            "s" => s_as_str = value,
-                            "p" => p_as_str = value,
-                            _ => {}
-                        }
-                    }
-                }
-
-                if d.is_empty() {
-                    d = DEF_DESC;
-                }
-
-                if t.is_empty() {
-                    t = DEF_TAG;
-                }
-
-                let mut s = DEF_STAT;
-                if !s_as_str.is_empty() {
-                    _ = s_as_str.to_lowercase();
-                    // split up word to account for some misspellings
-                    match () {
-                        _ if s_as_str.contains("op")
-                        | s_as_str.contains("en") =>
-                        {
-                            s = IssueStatus::Open;
-                        }
-                        _ if s_as_str.contains("pr")
-                        | s_as_str.contains("og") =>
-                        {
-                            s = IssueStatus::InProgress;
-                        }
-                        _ if s_as_str.contains("cl")
-                        | s_as_str.contains("os") =>
-                        {
-                            s = IssueStatus::Closed;
-                        }
+                    match key.trim() {
+                        "t" => t = value.trim(),
+                        "d" => d = value.trim(),
+                        "s" => s_as_str = value.trim(),
+                        "p" => p_as_str = value.trim(),
                         _ => {}
                     }
                 }
 
-                let mut p = DEF_PRIO;
-                if !p_as_str.is_empty() {
-                    p = p_as_str.parse::<u32>().unwrap_or_default();
-                }
+                let s_lower = s_as_str.to_lowercase();
+                let status = match () {
+                    _ if s_lower.contains("op") || s_lower.contains("en") => {
+                        IssueStatus::Open
+                    }
+                    _ if s_lower.contains("pr") || s_lower.contains("og") => {
+                        IssueStatus::InProgress
+                    }
+                    _ if s_lower.contains("cl") || s_lower.contains("os") => {
+                        IssueStatus::Closed
+                    }
+                    _ => DEF_STAT,
+                };
 
-                let f_sh = utils::shorten_path(f.clone());
+                let prio = p_as_str.parse::<u32>().unwrap_or(DEF_PRIO);
 
                 parsed_issues.push(Issue {
-                    file: f_sh,
-                    line: i.0,
+                    file: utils::shorten_path(f.clone()),
+                    line: line_no,
                     desc: d.to_string(),
-                    prio: p,
+                    prio,
                     tag: t.to_string(),
-                    status: s,
+                    status,
                 });
             }
         }
@@ -316,6 +291,7 @@ impl Brakoll {
         }
     }
 
+    // *brakoll - d: add sorting logic to list() function, p: 100, t: feature, s: open
     /// list all issues found
     fn list(&mut self) {
         let len = self.issues.len();
@@ -334,7 +310,6 @@ impl Brakoll {
             println!("");
         }
     }
-    // *brakoll - d: tetet, p: 10, t: example, s: closed
 
     /// returns line beginning with prefix and derives usize(line #) and String (raw issue line)
 

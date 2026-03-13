@@ -92,6 +92,12 @@ With no arguments or flags, all the issues will be listed, sorted by priority an
 ``` terminal
 brakoll
 ```
+
+Filter issues by status.
+  
+``` terminal
+brakoll -s <status>
+```
   
 List number of issues with certain tags - list number of opened, closed and in-progress issues.
   

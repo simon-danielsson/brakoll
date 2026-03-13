@@ -24,6 +24,10 @@ List number of issues with certain tags - list number of opened, closed and in-p
 
 $ brakoll summary
 
+Filter issues by status
+
+$ brakoll -s <status>
+
 === Arguments/flags - General ===
 
 Print this help text.

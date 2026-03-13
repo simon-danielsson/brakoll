@@ -29,7 +29,7 @@
   
 Having a good method of tracking what's finished and what needs to be done is crucial once a project grows large enough. Of course, for team-driven development having a full-featured issue tracker such as GitHub or similar is preferable, but for solo-developers GitHub can feel like an over-engineered solution to a simple problem.
   
-My goal with Brakoll was to create an issue tracker that is portable between machines and requires no setup, configuration-file, folder or a specialty development-environment to use.
+My goal with Brakoll was to create an issue tracker that is portable between machines and requires no setup, configuration files, special folders, or a specific development environment.
   
 (The name "Brakoll" is derived from the swedish saying "bra koll" - if someone is living their life with structure and purpose, a swedish person may say they have "bra koll".)
   
@@ -51,10 +51,10 @@ cargo install brakoll
     
 ### Adding a new issue
   
-When you want to add something to your issue list you simply type it out in your project (tip: create a snippet for this; for example "issue").
+The core philosophy of Brakoll is that issues are opened, closed and edited **inside the codebase itself**. Issues live in the codebase and are not dependent on an internet-connection, or you having to pay a subscription fee at the end of every month. When you want to add something to your issue list you simply type it out in your project, perhaps next to relevant code (tip: create a snippet for this; for example "issue").
    
 ``` rust
-// *brakoll - d: fix typo in debug print, p: 10, t: debug, s: open
+// *brakoll - d: fix typo in debug print, p: 10, t: debug, s: closed
 fn debug() {
     println!("debugG")
 }
@@ -65,10 +65,14 @@ fn debug() {
 - t: tag (optional - fallback: n/a)
 - s: status [ (op)en | (pr)ogress | (cl)osed ] (optional - fallback: open)
   
+The status value can take abbreviations (i.e. op, pr & cl).
+  
 
 > [!IMPORTANT]  
-> * Issues are currently only single-line! If you want a long description, write it all on a single line or alternatively refer to a bigger document somewhere else inside your description.  
-> * The prefix "*brakoll" is required but whatever is before it on the line is of no importance to the parser and will be ignored, e.g "#", "//", "--" or any other comment syntax.
+> * An issue line is any line containing the prefix "*brakoll".
+> * Everything before the prefix on an issue line is ignored by the parser.
+> * Everything after the prefix is parsed as metadata.
+> * Multiple tags are not supported - this is by design, to force clarity when opening issues!
   
 Here's a way to integrate Brakoll into your neovim config using luasnip:
   
@@ -90,7 +94,7 @@ return {
   
 ### Subcommands and flags
   
-All the issues listed, sorted by priority and status:
+All the issues listed, sorted by priority and status (the current directory is scanned recursively by default):
   
 ``` terminal
 brakoll
@@ -120,7 +124,7 @@ Filter issues by description:
 brakoll -d <keyword>
 ```
   
-Limit search to zero depth (i.e. no recursion):
+Limit scan to shallow depth (i.e. no recursion):
   
 ``` terminal
 brakoll -r

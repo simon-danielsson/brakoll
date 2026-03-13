@@ -4,7 +4,7 @@ When you want to add something to your issue list you simply
 type it out in your project (tip: create a snippet for this; for example "issue").
 
 Example:
-*brakoll - d: fix formatting issue in debug statement, p: 10, t: debug, s: open
+*brakoll - d: fix formatting issue in debug statement, p: 10, t: debug, s: closed
 
 d: description of the issue (obligatory)
 p: priority from 0 to infinity where the highest number takes priority (optional - fallback: 0)
@@ -12,12 +12,9 @@ t: tag (optional - fallback: n/a)
 s: status [ (op)en | (pr)ogress | (cl)osed ] (optional - fallback: open)
 
 Important:
-* Issues are currently only single-line! If you want a long description,
-  write it all on a single line or alternatively refer to a bigger document
-  somewhere else inside your description.
-* The prefix "*brakoll" is required but whatever is before it on the line
-  is of no importance to the parser and will be ignored,
-  e.g "#", "//", "--" or any other comment syntax.
+* An issue line is any line containing the prefix "*brakoll".
+* Everything before the prefix on an issue line is ignored by the parser.
+* Everything after the prefix is parsed as metadata.
 
 === Flags & Subcommands ===
 

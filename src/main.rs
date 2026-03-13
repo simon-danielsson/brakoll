@@ -53,6 +53,7 @@ fn main() -> io::Result<()> {
     ];
 
     // *brakoll - d: implement -r flag to have the program not search for issues in child directories (i.e non-recursive search), p: 20, t: feature, s: closed
+    // *brakoll - d: loadingbar is not rendering properly and looks quite ugly, p: 40, t: bug, s: in progress
     println!("Searching for issues...");
     let files_found = b.walk_children(&blacklist)?;
 

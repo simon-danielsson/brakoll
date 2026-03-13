@@ -27,6 +27,7 @@ const DEF_STAT: IssueStatus = IssueStatus::Open;
 fn main() -> io::Result<()> {
     // === get args ===
 
+    // *brakoll - d: add command to copy "tag: desc" of an issue with maybe "brakoll copy <id>" for quicker git commit messages, p: 80, t: feature, s: prog
     // *brakoll - d: implement close/open/prog command with id number to allow user to change status of issues from commandline (implement dynamic id application), p: 20, t: feature, s: closed
     let args = arg::parse()?;
     if args.help {
@@ -54,7 +55,7 @@ fn main() -> io::Result<()> {
     ];
 
     // *brakoll - d: implement -r flag to have the program not search for issues in child directories (i.e non-recursive search), p: 20, t: feature, s: closed
-    // *brakoll - d: loadingbar is not rendering properly and looks quite ugly, p: 40, t: bug, s: in progress
+    // *brakoll - d: loadingbar is not rendering properly and looks quite ugly, p: 40, t: bug, s: open
     println!("Searching for issues...");
     let files_found = b.walk_children(&blacklist)?;
 
@@ -490,3 +491,4 @@ impl Brakoll {
             .collect()
     }
 }
+

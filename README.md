@@ -49,7 +49,7 @@ cargo install brakoll
     
 ### Adding a new issue
   
-When you want to add something to your issue list you simply type it out in your project (I would advise you to create a snippet for this; for example "issue").
+When you want to add something to your issue list you simply type it out in your project (tip: create a snippet for this; for example "issue").
    
 ``` rust
 // *brakoll - d: fix typo in debug print, p: 10, t: debug, s: open

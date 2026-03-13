@@ -15,15 +15,11 @@ const DEF_DESC: &str = "issue";
 // default prio if it is both missing or invalid (i.e. -2 or 101)
 const DEF_PRIO: u32 = 0;
 const DEF_TAG: &str = "n/a";
-const DEF_STAT: IssueStatus = IssueStatus::Todo;
+const DEF_STAT: IssueStatus = IssueStatus::Open;
 
 // === program ===
 
 fn main() -> io::Result<()> {
-    // let l = read_lines("main.rs");
-    // for line in l.iter() {
-    //     print!("Line: {}\nIssue: {}\n", line.0, line.1)
-    // }
     let mut b = Brakoll::new();
     let files_found = b.walk_children()?;
     b.issues = b.process_issues(files_found);
@@ -33,15 +29,17 @@ fn main() -> io::Result<()> {
 
 #[derive(Debug, PartialEq)]
 enum IssueStatus {
-    Todo,
-    Done,
+    Open,
+    InProgress,
+    Closed,
 }
 
 impl fmt::Display for IssueStatus {
     fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
         let s = match self {
-            IssueStatus::Todo => "todo",
-            IssueStatus::Done => "done",
+            IssueStatus::Open => "open",
+            IssueStatus::InProgress => "in progress",
+            IssueStatus::Closed => "closed",
         };
         write!(f, "{s}")
     }
@@ -124,7 +122,7 @@ impl Brakoll {
             let raw_issues = self.find_issues(&f);
 
             // example:
-            // *brakoll - d: fix formatting issue in debug statement, p: 10, t: debug, s: todo
+            // *brakoll - d: fix formatting issue in debug statement, p: 10, t: debug, s: open
             for i in raw_issues {
                 let mut d = "";
                 let mut t = "";
@@ -163,10 +161,25 @@ impl Brakoll {
 
                 let mut s = DEF_STAT;
                 if !s_as_str.is_empty() {
-                    if s_as_str.to_lowercase().contains("todo") {
-                        s = IssueStatus::Todo;
-                    } else {
-                        s = IssueStatus::Done;
+                    _ = s_as_str.to_lowercase();
+                    // split up word to account for some misspellings
+                    match () {
+                        _ if s_as_str.contains("op")
+                        | s_as_str.contains("en") =>
+                        {
+                            s = IssueStatus::Open;
+                        }
+                        _ if s_as_str.contains("pr")
+                        | s_as_str.contains("og") =>
+                        {
+                            s = IssueStatus::InProgress;
+                        }
+                        _ if s_as_str.contains("cl")
+                        | s_as_str.contains("os") =>
+                        {
+                            s = IssueStatus::Closed;
+                        }
+                        _ => {}
                     }
                 }
 
@@ -191,16 +204,36 @@ impl Brakoll {
         parsed_issues
     }
 
+    /// helper for list()
+    fn issues_found_print(&mut self, len: usize) {
+        match len {
+            0 => {
+                println!("No issues were found.");
+            }
+            1 => {
+                println!("1 issue was found.");
+            }
+            _ => {
+                println!("{} issues were found.", len);
+            }
+        }
+    }
+
+    /// list all issues found
     fn list(&mut self) {
+        let len = self.issues.len();
         if self.issues.is_empty() {
-            println!("No issue was found.");
+            self.issues_found_print(len);
         } else {
-            println!("{} issue(s) were found.", self.issues.len());
+            self.issues_found_print(len);
             println!("");
             for i in self.issues.iter_mut() {
-                if i.status == IssueStatus::Todo {
+                // different header decoration depending on status
+                if i.status == IssueStatus::Open {
                     println!("*** {p}: {s} ***", p = i.prio, s = i.status);
-                } else {
+                } else if i.status == IssueStatus::InProgress {
+                    println!("/// {p}: {s} ///", p = i.prio, s = i.status);
+                } else if i.status == IssueStatus::Closed {
                     println!("=== {p}: {s} ===", p = i.prio, s = i.status);
                 }
                 println!("file: {}", i.file);
@@ -208,7 +241,7 @@ impl Brakoll {
                 println!("desc: {}", i.desc);
                 println!("");
             }
-            println!("{} issue(s) were found.", self.issues.len());
+            self.issues_found_print(len);
         }
     }
 

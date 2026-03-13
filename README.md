@@ -52,13 +52,13 @@ cargo install brakoll
 When you want to add something to your issue list you simply type it out in your project (I would advise you to create a snippet for this; for example "issue").
    
 ``` rust
-// *brakoll - d: fix formatting issue in debug statement, p: 10, t: debug, s: todo
+// *brakoll - d: fix formatting issue in debug statement, p: 10, t: debug, s: open
 ```
   
 - d: description of the issue (obligatory)
 - p: priority from 0 to infinity where the highest number is the most critical priority (optional - fallback: 0)
 - t: tag (optional - fallback: n/a)
-- s: status [done | todo] (optional - fallback: todo)
+- s: status [ (op)en | (pr)ogress | (cl)osed ] (optional - fallback: open)
   
 
 > [!IMPORTANT]  
@@ -77,7 +77,7 @@ return {
         t("*brakoll - d: "), i(1),
         t(", p: "), i(2),
         t(", t: "), i(3),
-        t(", s: todo"),
+        t(", s: open"),
     }),
 }
 ```
@@ -93,19 +93,24 @@ brakoll
 **Typical terminal output**
   
 ``` terminal
-2 issue(s) were found.
+3 issues were found.
 
-=== 50: done ===
+=== 10: closed ===
 file: ~/dev/my_awesome_project/src/api.rs
 line: 426, tag: refactor
 desc: query parser for-loop
 
-*** 10: todo ***
+*** 0: todo ***
 file: ~/dev/my_awesome_project/src/main.rs
 line: 108, tag: debug
 desc: fix formatting issue in debug statement
 
-2 issue(s) were found.
+/// 7: in progress ///
+file: ~/dev/my_awesome_project/src/utils/tools.rs
+line: 18, tag: refactor
+desc: abstract structs
+
+3 issues were found.
 ```
 
 

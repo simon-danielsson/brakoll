@@ -108,6 +108,7 @@ impl Brakoll {
 
         let blacklist = vec![
             "node_modules".to_string(),
+            "README".to_string(),
             "target".to_string(),
             ".cargo".to_string(),
             ".git".to_string(),
@@ -152,6 +153,7 @@ impl Brakoll {
 
         let blacklist = vec![
             "node_modules".to_string(),
+            "README".to_string(),
             "target".to_string(),
             ".cargo".to_string(),
             ".git".to_string(),

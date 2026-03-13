@@ -5,6 +5,7 @@ use std::{env, io};
 use walkdir::{DirEntry, WalkDir};
 
 mod arg;
+mod help;
 mod utils;
 
 const PREFIX: &str = "*brakoll";
@@ -18,6 +19,12 @@ const DEF_STAT: IssueStatus = IssueStatus::Open;
 // === program ===
 
 fn main() -> io::Result<()> {
+    let arguments = arg::parse();
+    if arguments.help {
+        help::print();
+        return Ok(());
+    }
+
     let mut b = Brakoll::new();
     let files_found = b.walk_children()?;
     b.issues = b.process_issues(files_found);

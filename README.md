@@ -25,7 +25,7 @@
 ---
 <div id="info"></div>
 
-## 📌 Information
+## Information
   
 Having a good method of tracking what's finished and what needs to be done is crucial once a project grows large enough. Of course, for team-driven development having a full-featured issue tracker such as GitHub or similar is preferable, but for solo-developers GitHub can feel like an over-engineered solution to a simple problem.
   
@@ -38,7 +38,7 @@ The idea for this project was inspired directly by [this video](https://www.yout
 ---
 <div id="install"></div>
 
-## 📦 Install
+## Install
     
 ``` bash
 cargo install brakoll
@@ -47,7 +47,7 @@ cargo install brakoll
 ---
 <div id="usage"></div>
 
-## 💻 Usage
+## Usage
     
 ### Adding a new issue
   
@@ -141,13 +141,13 @@ brakoll help
 ---
 <div id="license"></div>
 
-## 📜 License
+## License
 This project is licensed under the [MIT License](https://github.com/simon-danielsson/brakoll/blob/main/LICENSE).  
   
 ---
 <div id="dependencies"></div>
 
-## 🛠 Dependencies
+## Dependencies
   
 - [crossterm](https://github.com/crossterm-rs/crossterm)  
 - [walkdir](https://github.com/BurntSushi/walkdir)  

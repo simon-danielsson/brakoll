@@ -1,10 +1,9 @@
 use crossterm::cursor;
 use std::collections::HashMap;
+use std::fmt;
 use std::fs::read_to_string;
 use std::io::{Write, stdout};
-use std::time::Duration;
 use std::{env, io};
-use std::{fmt, thread};
 use walkdir::WalkDir;
 
 use crate::arg::Arguments;
@@ -190,8 +189,6 @@ impl Brakoll {
             } else {
                 lb.state = State::Quit;
             }
-
-            thread::sleep(Duration::from_secs(1));
         }
 
         lb.util_cleanup()?;

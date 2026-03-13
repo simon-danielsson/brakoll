@@ -1,6 +1,7 @@
 === Adding a new issue ===
 
-When you want to add something to your issue list you simply type it out in your project (I would advise you to create a snippet for this; for example "issue").
+When you want to add something to your issue list you simply type it out in your project
+(I would advise you to create a snippet for this; for example "issue").
 
 Example:
 *brakoll - d: fix formatting issue in debug statement, p: 10, t: debug, s: open
@@ -11,7 +12,12 @@ t: tag (optional - fallback: n/a)
 s: status [ (op)en | (pr)ogress | (cl)osed ] (optional - fallback: open)
 
 Important:
-Issues are currently only single-line! If you want a long description, write it all on a single line or alternatively refer to a bigger document somewhere else inside your description. The prefix "*brakoll" is required but whatever is before it on the line is of no importance to the parser and will be ignored, e.g "#", "//", "--" or any other comment syntax.
+* Issues are currently only single-line! If you want a long description,
+  write it all on a single line or alternatively refer to a bigger document
+  somewhere else inside your description.
+* The prefix "*brakoll" is required but whatever is before it on the line
+  is of no importance to the parser and will be ignored,
+  e.g "#", "//", "--" or any other comment syntax.
 
 === Flags & Subcommands ===
 

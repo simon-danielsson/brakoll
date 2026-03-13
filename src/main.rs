@@ -1,6 +1,7 @@
 use dirs::home_dir;
 use std::fmt;
 use std::fs::read_to_string;
+use std::path::Path;
 use std::{env, io};
 use walkdir::{DirEntry, WalkDir};
 
@@ -65,40 +66,57 @@ impl Brakoll {
         Self { issues: Vec::new() }
     }
 
-    fn is_hidden(&mut self, entry: &DirEntry) -> bool {
-        entry.file_name()
-            .to_str()
-            .map(|s| s.starts_with("."))
-            .unwrap_or(false)
+    fn has_hidden_component(&mut self, path: &Path) -> bool {
+        path.components().any(|component| {
+            component
+                .as_os_str()
+                .to_str()
+                .map(|s| s.starts_with('.'))
+                .unwrap_or(false)
+        })
+    }
+
+    fn contains_blacklisted_path(&mut self, path: &Path, blacklist: &[String]) -> bool {
+        let path_str = path.to_string_lossy();
+        blacklist.iter().any(|needle| path_str.contains(needle))
+    }
+
+    fn should_ignore(&mut self, entry: &DirEntry, blacklist: &[String]) -> bool {
+        let path = entry.path();
+        self.has_hidden_component(path) || self.contains_blacklisted_path(path, blacklist)
     }
 
     /// returns paths to be searched for issues
     fn walk_children(&mut self) -> io::Result<Vec<String>> {
         let cd = env::current_dir()?;
-
-        let walker = WalkDir::new(cd).into_iter();
         let valid_file_extensions = utils::get_valid_file_ext();
-        // println!("{:?}", valid_file_extensions);
 
-        let mut valid_paths_found: Vec<String> = Vec::new();
+        let blacklist = vec![
+            "node_modules".to_string(),
+            "target".to_string(),
+            ".cargo".to_string(),
+            ".git".to_string(),
+        ];
 
-        for entry in walker.filter_entry(|e| !self.is_hidden(e)) {
+        let walker = WalkDir::new(&cd).into_iter();
+        let mut valid_paths_found = Vec::new();
+
+        for entry in walker.filter_entry(|e| !self.should_ignore(e, &blacklist)) {
             let entry = entry?;
             let path = entry.path();
 
             if path.is_file() {
-                // if file has a valid file extension, derive issues from it
                 if let Some(ext) = path.extension().and_then(|s| s.to_str()) {
-                    if valid_file_extensions.iter().any(|e| e == &ext) {
+                    if valid_file_extensions.iter().any(|e| e == ext) {
                         valid_paths_found.push(path.display().to_string());
                     }
                 }
             }
         }
+
         Ok(valid_paths_found)
     }
 
-    // *bk - d: this program works now, p: 81, t: engine, s: done
     fn process_issues(&mut self, files_found: Vec<String>) -> Vec<Issue> {
         let mut parsed_issues: Vec<Issue> = Vec::new();
 

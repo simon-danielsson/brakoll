@@ -3,8 +3,6 @@ use std::path::Path;
 use dirs::home_dir;
 use walkdir::DirEntry;
 
-use crate::IssueStatus;
-
 const VALID_FILE_EXT: &str = include_str!("./static/valid_file_ext");
 
 /// derive vec or file ext from file in src dir

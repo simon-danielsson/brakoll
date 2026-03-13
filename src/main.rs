@@ -1,6 +1,7 @@
 use crossterm::cursor;
 use std::collections::HashMap;
 use std::io::{Write, stdout};
+use std::path::PathBuf;
 use std::{env, io};
 use std::{fmt, fs};
 use walkdir::WalkDir;
@@ -26,16 +27,19 @@ const DEF_STAT: IssueStatus = IssueStatus::Open;
 fn main() -> io::Result<()> {
     // === get args ===
 
-    let args = arg::parse();
+    let args = arg::parse()?;
     if args.help {
         help::print();
         return Ok(());
     }
     // *brakoll - d: tree subcommand for more visual feedback on where issues are on the file system, p: 0, t: feature, s: open
-    // *brakoll - d: add optional target path that can be added at the end of any command (with some logic to identify if the path is a path and/or it is valid) , p: 90, t: feature, s: prog
 
+    // *brakoll - d: add optional target path that can be added at the end of any command (with some logic to identify if the path is a path and/or it is valid) , p: 90, t: feature, s: closed
     // === init ===
-    let mut b = Brakoll::new(args);
+    let mut b = Brakoll::new(args)?;
+    if b.args.opt_dir.exists() {
+        b.target_dir = PathBuf::from(b.args.opt_dir.clone());
+    }
 
     // === search ===
     // *brakoll - d: implement -r flag to have the program not search for issues in child directories (i.e non-recursive search), p: 20, t: feature, s: open
@@ -147,20 +151,21 @@ struct Issue {
 }
 
 struct Brakoll {
+    target_dir: PathBuf,
     issues: Vec<Issue>,
     args: Arguments,
 }
 
 impl Brakoll {
-    fn new(args: Arguments) -> Self {
-        Self {
+    fn new(args: Arguments) -> io::Result<Self> {
+        Ok(Self {
+            target_dir: env::current_dir()?,
             issues: Vec::new(),
             args,
-        }
+        })
     }
 
     fn count_search_items(&mut self) -> io::Result<usize> {
-        let cd = env::current_dir()?;
         let valid_file_extensions = utils::get_valid_file_ext();
 
         let blacklist = vec![
@@ -171,7 +176,7 @@ impl Brakoll {
             ".git".to_string(),
         ];
 
-        let walker = WalkDir::new(&cd).into_iter();
+        let walker = WalkDir::new(&self.target_dir).into_iter();
         let mut count = 0;
 
         for entry in walker.filter_entry(|e| !utils::should_ignore(e, &blacklist)) {
@@ -205,7 +210,6 @@ impl Brakoll {
         );
         lb.util_setup()?;
 
-        let cd = env::current_dir()?;
         let valid_file_extensions = utils::get_valid_file_ext();
 
         let blacklist = vec![
@@ -216,7 +220,7 @@ impl Brakoll {
             ".git".to_string(),
         ];
 
-        let walker = WalkDir::new(&cd).into_iter();
+        let walker = WalkDir::new(&self.target_dir).into_iter();
         let mut valid_paths_found = Vec::new();
 
         for entry in walker.filter_entry(|e| !utils::should_ignore(e, &blacklist)) {

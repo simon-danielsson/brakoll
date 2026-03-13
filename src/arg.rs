@@ -1,3 +1,5 @@
+use std::{io, path::PathBuf};
+
 use crate::IssueStatus;
 
 #[derive(PartialEq, Clone)]
@@ -9,16 +11,18 @@ pub struct Arguments {
     pub filter_tag: String,
     pub filter_desc: String,
     pub filter_status: Option<IssueStatus>,
+    pub opt_dir: PathBuf,
     // pub forecast: i32,
 }
 
-pub fn parse() -> Arguments {
+pub fn parse() -> io::Result<Arguments> {
     let mut it = std::env::args().skip(1); // skip program name
     let mut filter_tag = String::new();
     let mut filter_status = String::new();
     let mut filter_desc = String::new();
     let mut help = false;
     let mut summary = false;
+    let mut opt_dir = PathBuf::new();
     while let Some(arg) = it.next() {
         match arg.as_str() {
             "-t" => {
@@ -55,7 +59,10 @@ pub fn parse() -> Arguments {
             //         .parse::<i32>()
             //         .unwrap_or(DEF_FORECAST);
             // }
-            _ => {}
+            other => {
+                opt_dir = PathBuf::from(other);
+                break;
+            }
         }
     }
 
@@ -72,11 +79,12 @@ pub fn parse() -> Arguments {
     let filter_tag = filter_tag.trim();
     let filter_desc = filter_desc.trim();
 
-    Arguments {
+    Ok(Arguments {
         help,
         summary,
         filter_tag: filter_tag.to_string(),
         filter_desc: filter_desc.to_string(),
         filter_status: status,
-    }
+        opt_dir,
+    })
 }

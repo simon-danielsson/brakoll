@@ -202,44 +202,27 @@ impl Brakoll {
         parsed_issues
     }
 
-    /// helper for list()
-    fn issues_found_print(&mut self, len: usize) {
-        match len {
-            0 => {
-                println!("No issues were found.");
-            }
-            1 => {
-                println!("1 issue was found.");
-            }
-            _ => {
-                println!("{} issues were found.", len);
-            }
-        }
-    }
-
     /// list all issues found
     fn list(&mut self) {
         let len = self.issues.len();
         if self.issues.is_empty() {
-            self.issues_found_print(len);
+            utils::issues_found_print(len);
         } else {
-            self.issues_found_print(len);
+            utils::issues_found_print(len);
             println!("");
             for i in self.issues.iter_mut() {
-                // different header decoration depending on status
-                if i.status == IssueStatus::Open {
-                    println!("*** {p}: {s} ***", p = i.prio, s = i.status);
-                } else if i.status == IssueStatus::InProgress {
-                    println!("/// {p}: {s} ///", p = i.prio, s = i.status);
-                } else if i.status == IssueStatus::Closed {
-                    println!("=== {p}: {s} ===", p = i.prio, s = i.status);
-                }
+                println!(
+                    "{h} {p}: {s} {h}",
+                    p = i.prio,
+                    s = i.status,
+                    h = utils::issue_header_decor(&i.status)
+                );
                 println!("file: {}", i.file);
                 println!("line: {l}, tag: {t}", l = i.line, t = i.tag);
                 println!("desc: {}", i.desc);
                 println!("");
             }
-            self.issues_found_print(len);
+            utils::issues_found_print(len);
         }
     }
 

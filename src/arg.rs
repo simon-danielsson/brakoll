@@ -25,8 +25,9 @@ pub fn parse() -> Arguments {
             }
 
             "-s" => {
-                filter_status =
-                    it.next().expect("No tag was given after the \"-t\" flag.");
+                filter_status = it
+                    .next()
+                    .expect("No status was given after the \"-s\" flag.");
             }
 
             "help" => {

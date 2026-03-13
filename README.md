@@ -62,7 +62,7 @@ When you want to add something to your issue list you simply type it out in your
   
 
 > [!IMPORTANT]  
-> Issues are currently only single-line! If you want a long description, write it all on a single line or alternatively refer to a bigger document somewhere else inside your description. The prefix "*brakoll" is required but whatever is before it on the line is of no importance to the parser and will be ignored, e.g "#", "//", "--" or other comment syntax.
+> Issues are currently only single-line! If you want a long description, write it all on a single line or alternatively refer to a bigger document somewhere else inside your description. The prefix "*brakoll" is required but whatever is before it on the line is of no importance to the parser and will be ignored, e.g "#", "//", "--" or any other comment syntax.
   
 Here's a way to integrate Brakoll into your neovim config using luasnip:
   
@@ -100,7 +100,7 @@ file: ~/dev/my_awesome_project/src/api.rs
 line: 426, tag: refactor
 desc: query parser for-loop
 
-*** 0: todo ***
+*** 0: open ***
 file: ~/dev/my_awesome_project/src/main.rs
 line: 108, tag: debug
 desc: fix formatting issue in debug statement

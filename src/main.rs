@@ -1,9 +1,8 @@
 use crossterm::cursor;
 use std::collections::HashMap;
-use std::fmt;
-use std::fs::read_to_string;
 use std::io::{Write, stdout};
 use std::{env, io};
+use std::{fmt, fs};
 use walkdir::WalkDir;
 
 use crate::arg::Arguments;
@@ -172,15 +171,17 @@ impl Brakoll {
                 if let Some(ext) = path.extension().and_then(|s| s.to_str()) {
                     if valid_file_extensions.iter().any(|e| e == ext) {
                         valid_paths_found.push(path.display().to_string());
+                        lb.processed_counter += 1;
+                        if lb.processed_counter
+                        <= lb.files_to_process as i32
+                        {
+                            lb.loading_bar()?;
+                            lb.sout.flush()?;
+                        } else {
+                            lb.state = State::Quit;
+                        }
                     }
                 }
-            }
-            lb.processed_counter += 1;
-            if lb.processed_counter <= lb.files_to_process as i32 {
-                lb.loading_bar()?;
-                lb.sout.flush()?;
-            } else {
-                lb.state = State::Quit;
             }
         }
 
@@ -336,10 +337,12 @@ impl Brakoll {
     // *brakoll - d: tetet, p: 10, t: example, s: closed
 
     /// returns line beginning with prefix and derives usize(line #) and String (raw issue line)
+
     fn find_issues(&mut self, filename: &String) -> Vec<(usize, String)> {
-        read_to_string(filename)
-            .unwrap()
-            .lines()
+        let bytes = fs::read(filename).unwrap();
+        let content = String::from_utf8_lossy(&bytes);
+
+        content.lines()
             .enumerate()
             .filter(|(_, line)| line.contains(PREFIX))
             .filter(|(_, line)| line.contains("d:"))

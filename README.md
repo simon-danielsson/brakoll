@@ -52,7 +52,10 @@ cargo install brakoll
 When you want to add something to your issue list you simply type it out in your project (I would advise you to create a snippet for this; for example "issue").
    
 ``` rust
-// *brakoll - d: fix formatting issue in debug statement, p: 10, t: debug, s: open
+// *brakoll - d: fix typo in debug print, p: 10, t: debug, s: open
+fn debug() {
+    println!("debugG")
+}
 ```
   
 - d: description of the issue (obligatory)

@@ -32,13 +32,13 @@ fn main() -> io::Result<()> {
         return Ok(());
     }
     // *brakoll - d: tree subcommand for more visual feedback on where issues are on the file system, p: 0, t: feature, s: open
-    // *brakoll - d: add optional target path that can be added at the end of any command (with some logic to identify if the path is a path and/or it is valid) , p: 100, t: feature, s: progress
+    // *brakoll - d: add optional target path that can be added at the end of any command (with some logic to identify if the path is a path and/or it is valid) , p: 90, t: feature, s: prog
 
     // === init ===
     let mut b = Brakoll::new(args);
 
     // === search ===
-    // *brakoll - d: implement -r flag to have the program not search for issues in child directories (i.e non-recursive search), p: 100, t: feature, s: progress
+    // *brakoll - d: implement -r flag to have the program not search for issues in child directories (i.e non-recursive search), p: 20, t: feature, s: open
     println!("Searching for issues...");
     let files_found = b.walk_children()?;
 

@@ -46,7 +46,7 @@ pub fn issues_found_print(l: usize) {
 pub fn issue_header_decor(i: &IssueStatus) -> &str {
     match i {
         IssueStatus::Open => return "***",
-        IssueStatus::InProgress => return "///",
+        IssueStatus::InProgress => return "!!!",
         IssueStatus::Closed => return "===",
     }
 }

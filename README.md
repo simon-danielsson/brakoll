@@ -107,5 +107,6 @@ This project is licensed under the [MIT License](https://github.com/simon-daniel
 
 ## 🛠 Dependencies
   
+- [crossterm](https://github.com/crossterm-rs/crossterm)  
 - [walkdir](https://github.com/BurntSushi/walkdir)  
 - [dirs](https://codeberg.org/dirs/dirs-rs)  

@@ -59,7 +59,16 @@ fn main() -> io::Result<()> {
 
     b.sort_list();
 
-    // *brakoll - d: implement -d <word(s)> to filter output of list() by desc, p: 100, t: feature, s: progress
+    // *brakoll - d: implement -d <word(s)> to filter output of list() by desc, p: 100, t: feature, s: closed
+    let desc_flag = b.args.filter_desc.clone();
+    if !desc_flag.is_empty() {
+        println!("Filter by desc: {}", desc_flag);
+        b.issues =
+            b.issues.clone()
+                .into_iter()
+                .filter(|i| i.desc.contains(&desc_flag))
+                .collect();
+    }
 
     // *brakoll - d: implement -t <tag> flag to filter output of list() by tag, p: 50, t: feature, s: closed
     // apply tag filter flag

@@ -30,6 +30,9 @@ $ brakoll -s <tag>
 Filter issues by status:
 $ brakoll -s <status>
 
+Filter issues by description:
+$ brakoll -d <keyword>
+
 Summary of all issues:
 $ brakoll summary
 

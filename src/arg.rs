@@ -7,6 +7,7 @@ pub struct Arguments {
     pub help: bool,
     pub summary: bool,
     pub filter_tag: String,
+    pub filter_desc: String,
     pub filter_status: Option<IssueStatus>,
     // pub forecast: i32,
 }
@@ -15,6 +16,7 @@ pub fn parse() -> Arguments {
     let mut it = std::env::args().skip(1); // skip program name
     let mut filter_tag = String::new();
     let mut filter_status = String::new();
+    let mut filter_desc = String::new();
     let mut help = false;
     let mut summary = false;
     while let Some(arg) = it.next() {
@@ -26,6 +28,12 @@ pub fn parse() -> Arguments {
 
             "-s" => {
                 filter_status = it
+                    .next()
+                    .expect("No status was given after the \"-s\" flag.");
+            }
+
+            "-d" => {
+                filter_desc = it
                     .next()
                     .expect("No status was given after the \"-s\" flag.");
             }
@@ -62,11 +70,13 @@ pub fn parse() -> Arguments {
     };
 
     let filter_tag = filter_tag.trim();
+    let filter_desc = filter_desc.trim();
 
     Arguments {
         help,
         summary,
         filter_tag: filter_tag.to_string(),
+        filter_desc: filter_desc.to_string(),
         filter_status: status,
     }
 }

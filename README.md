@@ -92,17 +92,23 @@ All the issues listed, sorted by priority and status:
 ``` terminal
 brakoll
 ```
-
+  
 Filter issues by tag:
   
 ``` terminal
 brakoll -t <tag>
 ```
-
+  
 Filter issues by status:
   
 ``` terminal
 brakoll -s <status>
+```
+  
+Filter issues by description:
+  
+``` terminal
+brakoll -d <keyword>
 ```
   
 Summary of all issues:

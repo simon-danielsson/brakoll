@@ -39,8 +39,8 @@ $ brakoll -r
 Summary of all issues:
 $ brakoll summary
 
-Copy issue details to clipboard,
-with formatting "tag (file:line): desc":
+Copy issue details to clipboard with formatting: "tag (file:line): desc".
+This is to reduce the friction of writing git commit messages.
 $ brakoll copy <id>
 $ brakoll cp <id>
 

@@ -123,9 +123,10 @@ commit() {
 1. Create new issue within the codebase.  
 2. When I want to work on the issue, I set its status to "in progress" either directly in the code or through the CLI.  
 3. Finish working on the issue.  
-3. Run command `brakoll` (with relevant filter flags if necessary) to find its id number.  
-4. Run bash script `commit <id>` to close the issue and commit it to git.  
-5. Rinse and repeat.  
+4. Run command `brakoll` (with relevant filter flags if necessary) to find its id number.  
+5. Run bash script `commit <id>` to close the issue and commit it to git.  
+6. Run command `brakoll summary` every once in a while to track my progress.  
+7. Rinse and repeat.  
   
 ---
 <div id="subc"></div>

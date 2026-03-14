@@ -92,8 +92,7 @@ return {
 }
 ```
   
-Here's a way to integrate Brakoll into git using a bash alias  
-(replace pbpaste with your preffered clipboard manager):
+Here's a way to integrate Brakoll into git using a bash alias:
   
 ``` bash
 unalias commit 2>/dev/null
@@ -101,7 +100,15 @@ commit() {
     local id="$1"
     brakoll closed $id
     brakoll cp $id
-    clip=$(pbpaste)
+
+    if command -v pbpaste >/dev/null; then
+        clip=$(pbpaste)
+    elif command -v xclip >/dev/null; then
+        clip=$(xclip -o -selection clipboard)
+    elif command -v wl-paste >/dev/null; then
+        clip=$(wl-paste)
+    fi
+
     git add --all
     git commit -a -m "$clip"
 }

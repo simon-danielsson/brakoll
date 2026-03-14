@@ -136,8 +136,8 @@ Summary of all issues:
 brakoll summary
 ```
   
-Copy issue details to clipboard with formatting: "tag (file:line): desc".
-This is to reduce the friction of writing git commit messages.
+Copy issue details to clipboard with formatting: "tag (file:line): desc".  
+This is to reduce the friction of writing git commit messages.  
   
 ``` terminal
 brakoll copy <id>

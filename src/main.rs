@@ -197,9 +197,15 @@ impl Brakoll {
 
         let (_, filename) = issue.file.rsplit_once("/").unwrap();
 
+        let mut tag = issue.tag.clone();
+
+        if tag == "n/a" {
+            tag = "issue".to_string();
+        }
+
         let output = format!(
             "{t} ({f}:{l}): {d}",
-            t = issue.tag,
+            t = tag,
             f = filename,
             l = issue.line,
             d = issue.desc

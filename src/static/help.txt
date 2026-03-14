@@ -39,6 +39,11 @@ $ brakoll -r
 Summary of all issues:
 $ brakoll summary
 
+Copy issue details to clipboard,
+with formatting "tag (file:line): desc":
+$ brakoll copy <id>
+$ brakoll cp <id>
+
 Close issue through CLI:
 $ brakoll close <id>
 $ brakoll cl <id>

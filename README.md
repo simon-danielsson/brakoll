@@ -136,6 +136,14 @@ Summary of all issues:
 brakoll summary
 ```
   
+Copy issue details to clipboard,
+with formatting "tag (file:line): desc":
+  
+``` terminal
+brakoll copy <id>
+brakoll cp <id>
+```
+  
 Close issue through CLI:
   
 ``` terminal
@@ -179,3 +187,4 @@ This project is licensed under the [MIT License](https://github.com/simon-daniel
 - [crossterm](https://github.com/crossterm-rs/crossterm)  
 - [walkdir](https://github.com/BurntSushi/walkdir)  
 - [dirs](https://codeberg.org/dirs/dirs-rs)  
+- [cli-clipboard](https://github.com/allie-wake-up/cli-clipboard)  

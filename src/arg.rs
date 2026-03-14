@@ -13,6 +13,7 @@ pub struct Arguments {
     pub opt_dir: PathBuf,
     /// (id<u32>, status to switch to<Option<IssueStatus>>)
     pub change_status: (u32, Option<IssueStatus>),
+    pub copy_id: u32,
 }
 
 pub fn parse() -> io::Result<Arguments> {
@@ -24,6 +25,8 @@ pub fn parse() -> io::Result<Arguments> {
     let mut summary = false;
     let mut no_rec = false;
     let mut opt_dir = PathBuf::new();
+
+    let mut copy_id: u32 = 0;
 
     // status change subc vars
     let mut status_ch_status: Option<IssueStatus> = None;
@@ -85,6 +88,15 @@ pub fn parse() -> io::Result<Arguments> {
                     .unwrap_or(0);
             }
 
+            "copy" | "cp" => {
+                copy_id = it
+                    .next()
+                    .as_deref()
+                    .unwrap_or(format!("{}", 0).as_str())
+                    .parse::<u32>()
+                    .unwrap_or(0);
+            }
+
             "summary" => {
                 summary = true;
             }
@@ -118,5 +130,6 @@ pub fn parse() -> io::Result<Arguments> {
         filter_status: status,
         opt_dir,
         change_status: (status_ch_id, status_ch_status),
+        copy_id,
     })
 }

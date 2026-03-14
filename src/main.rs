@@ -28,8 +28,8 @@ fn main() -> io::Result<()> {
     // === get args ===
 
     // *brakoll - d: add "doc" subcommand that saves both the summary and the list output into an md file in the target directory, p: 20, t: feature, s: open
-    // *brakoll - d: the status change command adds a newline at the end of every file it adjusts issues inside, p: 10, t: bug, s: in progress
-    // *brakoll - d: add command to copy "tag: desc" of an issue with maybe "brakoll copy <id>" for quicker git commit messages, p: 80, t: feature, s: prog
+    // *brakoll - d: the status change command adds a newline at the end of every file it adjusts issues inside, p: 10, t: bug, s: open
+    // *brakoll - d: add command to copy "tag: desc" of an issue with maybe "brakoll copy <id>" for quicker git commit messages, p: 80, t: feature, s: closed
     // *brakoll - d: implement close/open/prog command with id number to allow user to change status of issues from commandline (implement dynamic id application), p: 20, t: feature, s: closed
     let args = arg::parse()?;
     if args.help {
@@ -79,12 +79,12 @@ fn main() -> io::Result<()> {
     // change status if appropr. flag was added
     if b.args.change_status.1 != None {
         if b.args.change_status.0 == 0 {
-            println!("Invalid ID! Status change was cancelled.");
+            println!("Invalid ID! Status change has been cancelled.");
             return Ok(());
         }
         match b.change_status_of_issue()? {
             false => {
-                println!("Invalid ID! Status change was cancelled.");
+                println!("Invalid ID! Status change has been cancelled.");
                 return Ok(());
             }
             true => {
@@ -96,6 +96,20 @@ fn main() -> io::Result<()> {
                 return Ok(());
             }
         }
+    }
+
+    // copy/cp subcommand
+    if b.args.copy_id != 0 {
+        match b.copy_issue_to_clipboard()? {
+            true => {
+                println!("Copied issue [{}] to OS clipboard", b.args.copy_id,);
+                return Ok(());
+            }
+            false => {
+                println!("Invalid ID! Copy operation has been cancelled.");
+                return Ok(());
+            }
+        };
     }
 
     // filter & sort
@@ -167,6 +181,31 @@ impl Brakoll {
             issues: Vec::new(),
             args,
         })
+    }
+
+    fn copy_issue_to_clipboard(&mut self) -> io::Result<bool> {
+        let mut issues = self
+            .issues
+            .iter()
+            .filter(|i| i.id == self.args.copy_id)
+            .take(2);
+        let issue = match (issues.next(), issues.next()) {
+            (Some(issue), None) => issue, // exactly one
+            _ => return Ok(false),        // zero or more than one
+        };
+
+        let (_, filename) = issue.file.rsplit_once("/").unwrap();
+
+        let output = format!(
+            "{t} ({f}:{l}): {d}",
+            t = issue.tag,
+            f = filename,
+            l = issue.line,
+            d = issue.desc
+        );
+        cli_clipboard::set_contents(output.to_owned()).unwrap();
+
+        Ok(true)
     }
 
     /// change status if appropr. flag was added

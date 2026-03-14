@@ -1,8 +1,8 @@
 [package]
 name = "brakoll"
-version = "0.3.7"
+version = "0.3.8"
 edition = "2024"
-description = "Simple issue tracker for coding projects"
+description = "Opinionated issue tracker built for solo developers."
 repository = "https://github.com/simon-danielsson/brakoll"
 authors = ["Simon Danielsson <contact@simondanielsson.se>"]
 keywords = ["utility", "development", "productivity", "cli"]

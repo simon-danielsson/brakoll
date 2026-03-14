@@ -3,7 +3,7 @@
 </h1>
   
 <p align="center">
-  <em>Simple issue tracker for coding projects</em>
+  <em>Opinionated issue tracker built for solo developers.</em>
 </p>
   
 <p align="center">
@@ -68,7 +68,7 @@ fn debug() {
 - t: tag (optional - fallback: n/a)
 - s: status [ (op)en | (pr)ogress | (cl)osed ] (optional - fallback: open)
   
-The status value can take abbreviations (i.e. op, pr & cl).
+The status value can also take abbreviations (op, pr & cl).
   
 
 > [!IMPORTANT]  
@@ -120,7 +120,7 @@ commit() {
 ```
   
 **My development workflow with Brakoll looks like this:**  
-1. Create new issue within the codebase.  
+1. Create a new issue within the codebase.  
 2. When I want to work on the issue, I set its status to "in progress" either directly in the code or through the CLI.  
 3. Finish working on the issue.  
 4. Run command `brakoll` (with relevant filter flags if necessary) to find its id number.  

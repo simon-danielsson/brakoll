@@ -6,6 +6,7 @@ pub const APP_REPO: &str = env!("CARGO_PKG_REPOSITORY");
 pub const APP_DESC: &str = env!("CARGO_PKG_DESCRIPTION");
 pub const APP_AUTH: &str = env!("CARGO_PKG_AUTHORS");
 
+// *brakoll - d: make help subc prettier, p: 100, t: docs, s: prog
 pub fn print() {
     println!("");
     println!("{n} v{v}", n = APP_NAME, v = APP_VERS);

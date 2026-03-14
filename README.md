@@ -18,7 +18,8 @@
   <a href="#install">Install</a> •
   <a href="#usage">Usage</a>
   <br>
-  <a href="#subc">Subcommands and flags</a> •
+  <a href="#subc">Subcommands and flags</a>
+  <br>
   <a href="#dependencies">Dependencies</a> •
   <a href="#license">License</a>
 </p>  

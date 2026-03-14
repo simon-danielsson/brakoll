@@ -16,7 +16,9 @@
 <p align="center">
   <a href="#info">Info</a> •
   <a href="#install">Install</a> •
-  <a href="#usage">Usage</a> •
+  <a href="#usage">Usage</a>
+  <br>
+  <a href="#subc">Subcommands and flags</a> •
   <a href="#dependencies">Dependencies</a> •
   <a href="#license">License</a>
 </p>  
@@ -74,6 +76,8 @@ The status value can take abbreviations (i.e. op, pr & cl).
 > * Everything after the prefix is parsed as metadata.
 > * Multiple tags are not supported - this is by design, to force clarity when opening issues!
   
+### Workflow integration
+  
 Here's a way to integrate Brakoll into your neovim config using luasnip:
   
 ``` lua
@@ -114,7 +118,18 @@ commit() {
 }
 ```
   
-### Subcommands and flags
+**My development workflow with Brakoll looks like this:**  
+1. Create new issue within the codebase.  
+2. When I want to work on the issue, I set its status to "in progress" either directly in the code or through the CLI.  
+3. Finish working on the issue.  
+3. Run command `brakoll` (with relevant filter flags if necessary) to find its id number.  
+4. Run bash script `commit <id>` to close the issue and commit it to git.  
+5. Rinse and repeat.  
+  
+---
+<div id="subc"></div>
+  
+## Subcommands and flags
   
 All the issues listed, sorted by priority and status (the current directory is scanned recursively by default):
   

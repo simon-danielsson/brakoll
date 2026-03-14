@@ -92,6 +92,21 @@ return {
 }
 ```
   
+Here's a way to integrate Brakoll into git using a bash alias  
+(replace pbpaste with your preffered clipboard manager):
+  
+``` bash
+unalias commit 2>/dev/null
+commit() {
+    local id="$1"
+    brakoll closed $id
+    brakoll cp $id
+    clip=$(pbpaste)
+    git add --all
+    git commit -a -m "$clip"
+}
+```
+  
 ### Subcommands and flags
   
 All the issues listed, sorted by priority and status (the current directory is scanned recursively by default):

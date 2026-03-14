@@ -88,6 +88,7 @@ pub fn parse() -> io::Result<Arguments> {
                     .unwrap_or(0);
             }
 
+            // *brakoll - d: allow copying multiple tags at once? (i.e. brakoll cp 5 2 7 9), p: 0, t: feature, s: open
             "copy" | "cp" => {
                 copy_id = it
                     .next()

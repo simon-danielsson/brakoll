@@ -183,6 +183,7 @@ impl Brakoll {
         })
     }
 
+    // *brakoll - d: there is a fallback 'n/a' if a tag is omitted during issue creation and this would look weird with the current clipboard formatting, p: 60, t: fix, s: prog
     fn copy_issue_to_clipboard(&mut self) -> io::Result<bool> {
         let mut issues = self
             .issues

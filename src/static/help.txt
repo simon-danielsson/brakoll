@@ -49,6 +49,7 @@ $ brakoll cp <id>
 
 Close issue through CLI:
 $ brakoll close <id>
+$ brakoll closed <id>
 $ brakoll cl <id>
 
 Open issue through CLI:

@@ -69,7 +69,7 @@ pub fn parse() -> io::Result<Arguments> {
                     .parse::<u32>()
                     .unwrap_or(0);
             }
-            "close" | "cl" => {
+            "close" | "cl" | "closed" => {
                 status_ch_status = Some(IssueStatus::Closed);
                 status_ch_id = it
                     .next()

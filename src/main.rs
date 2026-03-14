@@ -215,6 +215,7 @@ impl Brakoll {
         Ok(true)
     }
 
+    // *brakoll - d: sometimes the status won't change (i'm not sure if this is due to the bash script or the logic to find the line itself), p: 100, t: fix, s: closed
     /// change status if appropr. flag was added
     fn change_status_of_issue(&mut self) -> io::Result<bool> {
         // find issue in self vector

@@ -103,7 +103,7 @@ Here's a way to integrate Brakoll into git using a bash alias:
 unalias commit 2>/dev/null
 commit() {
     local id="$1"
-    brakoll closed $id
+    brakoll close $id
     brakoll cp $id
 
     if command -v pbpaste >/dev/null; then
@@ -186,6 +186,7 @@ brakoll cp <id>
 Close issue through CLI:
   
 ``` terminal
+brakoll closed <id>
 brakoll close <id>
 brakoll cl <id>
 ```

@@ -10,8 +10,6 @@ feature: closed issues shouldn't be displaying a priority number
 ~/dev/rust/brakoll/src/main.rs:35
 feature: tree subcommand for more visual feedback on where issues are on the file system
 
-*brakoll - d: i want to copy this, p: 100, s: prog
-
 [4] 40 - open
 ~/dev/rust/brakoll/src/main.rs:85
 bug: loadingbar is not rendering properly and looks quite ugly

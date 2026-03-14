@@ -1,13 +1,13 @@
-use crossterm::cursor;
+// use crossterm::cursor;
 use std::collections::HashMap;
-use std::io::{Write, stdout};
+// use std::io::{Write, stdout};
 use std::path::PathBuf;
 use std::{env, io};
 use std::{fmt, fs};
 use walkdir::WalkDir;
 
 use crate::arg::Arguments;
-use crate::loading_bar::{LoadingBar, State};
+// use crate::loading_bar::{LoadingBar, State};
 
 mod arg;
 mod help;
@@ -339,16 +339,17 @@ impl Brakoll {
     fn walk_children(&mut self, blacklist: &Vec<String>) -> io::Result<Vec<String>> {
         let items_to_search = self.count_search_items(&blacklist)?;
 
-        // init loading bar
-        let sout = stdout();
-        let init_cursor_pos = cursor::position()?;
-        let mut lb = LoadingBar::new(
-            sout,
-            items_to_search as i32,
-            init_cursor_pos.0,
-            init_cursor_pos.1 + 1,
-        );
-        lb.util_setup()?;
+        // *brakoll - d: remove loadingbar entirely until it can be fixed, p: 100, t: fix, s: closed
+        // // init loading bar
+        // let sout = stdout();
+        // let init_cursor_pos = cursor::position()?;
+        // let mut lb = LoadingBar::new(
+        //     sout,
+        //     items_to_search as i32,
+        //     init_cursor_pos.0,
+        //     init_cursor_pos.1 + 1,
+        // );
+        // lb.util_setup()?;
 
         let valid_file_extensions = utils::get_valid_file_ext();
 
@@ -362,10 +363,10 @@ impl Brakoll {
         let mut valid_paths_found = Vec::new();
 
         for entry in walker.filter_entry(|e| !utils::should_ignore(e, &blacklist)) {
-            lb.controls()?;
-            if lb.state == State::Quit {
-                break;
-            }
+            // lb.controls()?;
+            // if lb.state == State::Quit {
+            //     break;
+            // }
 
             let entry = entry?;
             let path = entry.path();
@@ -374,21 +375,21 @@ impl Brakoll {
                 if let Some(ext) = path.extension().and_then(|s| s.to_str()) {
                     if valid_file_extensions.iter().any(|e| e == ext) {
                         valid_paths_found.push(path.display().to_string());
-                        lb.processed_counter += 1;
-                        if lb.processed_counter
-                        <= lb.files_to_process as i32
-                        {
-                            lb.loading_bar()?;
-                            lb.sout.flush()?;
-                        } else {
-                            lb.state = State::Quit;
-                        }
+                        // lb.processed_counter += 1;
+                        // if lb.processed_counter
+                        // <= lb.files_to_process as i32
+                        // {
+                        //     lb.loading_bar()?;
+                        //     lb.sout.flush()?;
+                        // } else {
+                        //     lb.state = State::Quit;
+                        // }
                     }
                 }
             }
         }
 
-        lb.util_cleanup()?;
+        // lb.util_cleanup()?;
 
         Ok(valid_paths_found)
     }

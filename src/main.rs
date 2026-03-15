@@ -1,17 +1,13 @@
-// use crossterm::cursor;
 use std::collections::HashMap;
-// use std::io::{Write, stdout};
 use std::path::PathBuf;
 use std::{env, io};
 use std::{fmt, fs};
 use walkdir::WalkDir;
 
 use crate::arg::Arguments;
-// use crate::loading_bar::{LoadingBar, State};
 
 mod arg;
 mod help;
-mod loading_bar;
 mod utils;
 
 const PREFIX: &str = "*brakoll";
@@ -57,7 +53,7 @@ fn main() -> io::Result<()> {
     ];
 
     // *brakoll - d: implement -r flag to have the program not search for issues in child directories (i.e non-recursive search), p: 20, t: feature, s: closed
-    // *brakoll - d: loadingbar is not rendering properly and looks quite ugly, p: 40, t: bug, s: open
+    // *brakoll - d: loadingbar is not rendering properly and looks quite ugly, p: 40, t: bug, s: closed
     println!("Searching for issues...");
     let files_found = b.walk_children(&blacklist)?;
 
@@ -306,51 +302,9 @@ impl Brakoll {
         }
     }
 
-    // *brakoll - d: refactor blacklist so that only a single one exists for both the count_search_items() function and the other one whatever that was called, p: 40, t: refactor, s: closed
-    fn count_search_items(&mut self, blacklist: &Vec<String>) -> io::Result<usize> {
-        let valid_file_extensions = utils::get_valid_file_ext();
-
-        // init walker
-        let mut walker = WalkDir::new(&self.target_dir);
-        if self.args.no_rec {
-            walker = walker.max_depth(1);
-        }
-        let walker = walker.into_iter();
-
-        let mut count = 0;
-
-        for entry in walker.filter_entry(|e| !utils::should_ignore(e, &blacklist)) {
-            let entry = entry?;
-            let path = entry.path();
-
-            if path.is_file() {
-                if let Some(ext) = path.extension().and_then(|s| s.to_str()) {
-                    if valid_file_extensions.iter().any(|e| e == ext) {
-                        count += 1;
-                    }
-                }
-            }
-        }
-
-        Ok(count)
-    }
-
+    // *brakoll - d: remove loadingbar and crossterm outright, p: 100, t: fix, s: closed
     /// returns paths to be searched for issues
     fn walk_children(&mut self, blacklist: &Vec<String>) -> io::Result<Vec<String>> {
-        let items_to_search = self.count_search_items(&blacklist)?;
-
-        // *brakoll - d: remove loadingbar entirely until it can be fixed, p: 100, t: fix, s: closed
-        // // init loading bar
-        // let sout = stdout();
-        // let init_cursor_pos = cursor::position()?;
-        // let mut lb = LoadingBar::new(
-        //     sout,
-        //     items_to_search as i32,
-        //     init_cursor_pos.0,
-        //     init_cursor_pos.1 + 1,
-        // );
-        // lb.util_setup()?;
-
         let valid_file_extensions = utils::get_valid_file_ext();
 
         // init walker
@@ -363,11 +317,6 @@ impl Brakoll {
         let mut valid_paths_found = Vec::new();
 
         for entry in walker.filter_entry(|e| !utils::should_ignore(e, &blacklist)) {
-            // lb.controls()?;
-            // if lb.state == State::Quit {
-            //     break;
-            // }
-
             let entry = entry?;
             let path = entry.path();
 
@@ -375,21 +324,10 @@ impl Brakoll {
                 if let Some(ext) = path.extension().and_then(|s| s.to_str()) {
                     if valid_file_extensions.iter().any(|e| e == ext) {
                         valid_paths_found.push(path.display().to_string());
-                        // lb.processed_counter += 1;
-                        // if lb.processed_counter
-                        // <= lb.files_to_process as i32
-                        // {
-                        //     lb.loading_bar()?;
-                        //     lb.sout.flush()?;
-                        // } else {
-                        //     lb.state = State::Quit;
-                        // }
                     }
                 }
             }
         }
-
-        // lb.util_cleanup()?;
 
         Ok(valid_paths_found)
     }
